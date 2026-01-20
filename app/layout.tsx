@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VECTOR 384 | Rudra Mahapatro",
+  title: "V384",
   description:
-    "I architect survival-grade systems. Systems Engineer (Rust/C++) | Offensive Security | High-Frequency Infrastructure. Founder of Vector 384.",
+    "I architect survival-grade systems. Systems Engineer (Python/C++) | Offensive Security | High-Frequency Infrastructure. Founder of Vector 384.",
   keywords: [
     "Systems Engineer",
-    "Rust Developer",
+    "Python Developer",
     "C++ Developer",
     "Offensive Security",
     "Algorithmic Trading",
