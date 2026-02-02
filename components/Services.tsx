@@ -151,7 +151,7 @@ export default function Services() {
           className="mt-20 text-center"
         >
           <motion.a
-            href="mailto:rudra@vector384.com"
+            href="mailto:rudranarayanmohapatro@gmail.com"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="inline-flex items-center justify-center gap-3 px-12 py-5 bg-void text-stark font-bold uppercase tracking-wider text-sm border-4 border-void shadow-hard-orange hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all duration-150"
