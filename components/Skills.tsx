@@ -2,54 +2,59 @@
 
 import { motion } from "framer-motion";
 
-interface TerminalWindowProps {
-  title: string;
-  items: string[];
-  index: number;
+type ProficiencyLevel = "core" | "proficient" | "familiar";
+
+interface SkillItem {
+  name: string;
+  level: ProficiencyLevel;
 }
 
-function TerminalWindow({ title, items, index }: TerminalWindowProps) {
+interface SkillCategory {
+  title: string;
+  subtitle: string;
+  items: SkillItem[];
+}
+
+const DOT_COLORS: Record<ProficiencyLevel, string> = {
+  core: "bg-accent-amber",
+  proficient: "bg-accent-cyan",
+  familiar: "bg-text-muted",
+};
+
+function SkillCard({ category, index }: { category: SkillCategory; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true, margin: "-50px" }}
-      className="border-4 border-void shadow-brutal bg-void"
+      className="surface-solid overflow-hidden"
     >
-      {/* Terminal Header */}
-      <div className="bg-orange px-4 py-3 border-b-4 border-void flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 border-2 border-void bg-stark" />
-          <div className="w-3 h-3 border-2 border-void bg-stark" />
-          <div className="w-3 h-3 border-2 border-void bg-stark" />
+      <div className="p-6">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-2 h-2 rounded-full bg-accent-amber" />
+          <span className="font-mono text-accent-amber text-sm uppercase tracking-wider">
+            {category.title}
+          </span>
         </div>
-        <span className="font-mono text-sm font-bold text-void uppercase tracking-wider">
-          {title}
-        </span>
-        <div className="w-16" />
-      </div>
+        <p className="text-text-muted font-mono text-xs mb-5 pl-4">
+          {category.subtitle}
+        </p>
 
-      {/* Terminal Content */}
-      <div className="p-6 font-mono text-stark">
-        <div className="space-y-2">
-          {items.map((item, itemIndex) => (
-            <motion.div
-              key={item}
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 + itemIndex * 0.05 }}
+        <div className="flex flex-wrap gap-2">
+          {category.items.map((item, itemIndex) => (
+            <motion.span
+              key={item.name}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: index * 0.1 + itemIndex * 0.04 }}
               viewport={{ once: true }}
-              className="flex items-start gap-3"
+              className="inline-flex items-center gap-2 px-3 py-1.5 surface-outline rounded-full font-mono text-sm text-text-secondary hover:text-text-primary transition-colors duration-200"
             >
-              <span className="text-orange font-bold">$</span>
-              <span className="text-stark/90">{item}</span>
-            </motion.div>
+              <span className={`w-1.5 h-1.5 rounded-full ${DOT_COLORS[item.level]}`} />
+              {item.name}
+            </motion.span>
           ))}
-        </div>
-        <div className="mt-4 flex items-center gap-2">
-          <span className="text-orange font-bold">$</span>
-          <span className="w-3 h-5 bg-orange animate-pulse" />
         </div>
       </div>
     </motion.div>
@@ -57,55 +62,94 @@ function TerminalWindow({ title, items, index }: TerminalWindowProps) {
 }
 
 export default function Skills() {
-  const categories = [
+  const categories: SkillCategory[] = [
     {
       title: "SYSTEMS & LOW-LEVEL",
-      items: ["Rust (Rayon, Actix)", "C/C++ (Win32 API)", "Go (Golang)", "Bash Scripting"],
+      subtitle: "Zero-copy parsers, kernel-level networking",
+      items: [
+        { name: "Rust (Rayon, Actix)", level: "core" },
+        { name: "C/C++ (Win32 API)", level: "core" },
+        { name: "Go (Golang)", level: "proficient" },
+        { name: "Bash Scripting", level: "proficient" },
+      ],
     },
     {
       title: "OFFENSIVE SECURITY",
-      items: ["Metasploit", "Burp Suite", "Wireshark", "Nmap", "Katana", "Malware Analysis"],
+      subtitle: "Pen-testing, threat modeling, malware analysis",
+      items: [
+        { name: "Metasploit", level: "core" },
+        { name: "Burp Suite", level: "core" },
+        { name: "Wireshark", level: "proficient" },
+        { name: "Nmap", level: "proficient" },
+        { name: "Katana", level: "proficient" },
+        { name: "Malware Analysis", level: "familiar" },
+      ],
     },
     {
       title: "PRODUCT ENGINEERING",
-      items: ["Next.js/React", "Python (FastAPI)", "PostgreSQL/Redis", "Docker/Terraform", "TensorFlow/RAG"],
+      subtitle: "Full-stack SaaS, infra-as-code, databases",
+      items: [
+        { name: "Next.js/React", level: "core" },
+        { name: "Python (FastAPI)", level: "core" },
+        { name: "PostgreSQL/Redis", level: "proficient" },
+        { name: "Docker/Terraform", level: "proficient" },
+        { name: "TensorFlow/RAG", level: "familiar" },
+      ],
     },
     {
       title: "AI & MACHINE LEARNING",
-      items: ["LangChain", "OpenAI API", "Hugging Face", "Scikit-Learn", "Isolation Forest", "Pandas", "TensorFlow"],
+      subtitle: "LLM orchestration, anomaly detection, pipelines",
+      items: [
+        { name: "LangChain", level: "proficient" },
+        { name: "OpenAI API", level: "proficient" },
+        { name: "Hugging Face", level: "familiar" },
+        { name: "Scikit-Learn", level: "proficient" },
+        { name: "Isolation Forest", level: "core" },
+        { name: "Pandas", level: "core" },
+        { name: "TensorFlow", level: "familiar" },
+      ],
     },
   ];
 
   return (
-    <section id="skills" className="py-24 px-6 bg-stark border-t-4 border-void">
+    <section id="skills" className="py-24 px-6 bg-base-900/30 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
+        {/* Section Header — terminal prompt style */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="mb-16"
+          className="mb-12"
         >
-          <div className="inline-block border-4 border-void px-4 py-2 mb-6 shadow-brutal-sm bg-orange">
-            <span className="text-sm uppercase tracking-widest font-bold text-void">
-              Tech Stack
-            </span>
+          <div className="font-mono text-text-muted text-sm mb-6 tracking-wider">
+            <span className="text-accent-amber">$</span> cat /etc/skills.conf
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-            Technical Command<span className="text-orange">.</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight text-text-primary">
+            Technical Command<span className="text-accent-amber">.</span>
           </h2>
+
+          {/* Proficiency Legend */}
+          <div className="flex flex-wrap items-center gap-5 mt-5">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-accent-amber" />
+              <span className="font-mono text-xs text-text-muted uppercase tracking-wider">Core</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-accent-cyan" />
+              <span className="font-mono text-xs text-text-muted uppercase tracking-wider">Proficient</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-text-muted" />
+              <span className="font-mono text-xs text-text-muted uppercase tracking-wider">Familiar</span>
+            </div>
+          </div>
         </motion.div>
 
-        {/* Terminal Windows Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Skills Grid — 2 columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {categories.map((category, index) => (
-            <TerminalWindow
-              key={category.title}
-              title={category.title}
-              items={category.items}
-              index={index}
-            />
+            <SkillCard key={category.title} category={category} index={index} />
           ))}
         </div>
       </div>

@@ -1,19 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavLinkProps {
   href: string;
   children: React.ReactNode;
+  active?: boolean;
 }
 
-function NavLink({ href, children }: NavLinkProps) {
+function NavLink({ href, children, active }: NavLinkProps) {
   return (
     <a
       href={href}
-      className="px-4 py-2 text-sm uppercase tracking-wider text-void font-bold border-4 border-transparent hover:border-void hover:bg-orange hover:text-void transition-all duration-150"
+      className={`relative px-4 py-2 font-mono text-sm uppercase tracking-wider transition-colors duration-300 after:absolute after:bottom-0 after:h-[2px] after:bg-accent-amber after:transition-all after:duration-300 ${
+        active
+          ? "text-accent-amber after:left-0 after:w-full"
+          : "text-text-secondary hover:text-accent-amber after:left-1/2 after:w-0 hover:after:left-0 hover:after:w-full"
+      }`}
     >
       {children}
     </a>
@@ -23,13 +28,38 @@ function NavLink({ href, children }: NavLinkProps) {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  const handleScroll = useCallback(() => {
+    requestAnimationFrame(() => {
+      setScrolled(window.scrollY > 20);
+    });
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  useEffect(() => {
+    const sections = ["about", "projects", "skills", "services"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: "-50% 0px -50% 0px" }
+    );
+
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -40,39 +70,45 @@ export default function Navbar() {
       className="fixed z-50 top-0 left-0 right-0 transition-all duration-300"
     >
       <div
-        className={`mx-auto transition-all duration-300 ${
+        className={`transition-all duration-300 ${
           scrolled
-            ? "mt-4 max-w-4xl bg-stark/95 backdrop-blur-sm border-4 border-void shadow-brutal mx-4 lg:mx-auto"
-            : "max-w-7xl bg-stark border-b-4 border-void"
+            ? "glass-nav border-b border-white/[0.06]"
+            : "bg-transparent"
         }`}
       >
-        <div className="px-6 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <a href="#" className="hover:opacity-80 transition-opacity duration-150">
-            <Image src="/logo.png" alt="Vector 384" width={140} height={45} className="h-10 w-auto" />
+            <Image
+              src="/logo.png"
+              alt="Vector 384"
+              width={140}
+              height={45}
+              className="h-10 w-auto mix-blend-screen"
+            />
           </a>
 
           <div className="hidden md:flex items-center gap-2">
-            <NavLink href="#about">About</NavLink>
-            <NavLink href="#projects">Arsenal</NavLink>
-            <NavLink href="#skills">Skills</NavLink>
-            <NavLink href="#services">Services</NavLink>
+            <NavLink href="#about" active={activeSection === "about"}>About</NavLink>
+            <NavLink href="#projects" active={activeSection === "projects"}>Arsenal</NavLink>
+            <NavLink href="#skills" active={activeSection === "skills"}>Skills</NavLink>
+            <NavLink href="#services" active={activeSection === "services"}>Services</NavLink>
           </div>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 border-4 border-void hover:bg-orange transition-colors duration-150"
+            className="md:hidden glass-card p-2 rounded-lg hover:border-accent-amber/30 transition-colors duration-150"
             aria-label="Toggle menu"
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 text-text-secondary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
               <path
-                strokeLinecap="square"
-                strokeLinejoin="miter"
-                strokeWidth={3}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
                 d={mobileMenuOpen ? "M6 6L18 18M6 18L18 6" : "M4 6h16M4 12h16M4 18h16"}
               />
             </svg>
@@ -86,49 +122,26 @@ export default function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden border-t-4 border-void overflow-hidden"
+              className="md:hidden overflow-hidden"
             >
-              <div className="flex flex-col p-4 gap-2">
-                <motion.a
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.05 }}
-                  href="#about"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-sm uppercase tracking-wider font-bold border-4 border-void hover:bg-orange"
-                >
-                  About
-                </motion.a>
-                <motion.a
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                  href="#projects"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-sm uppercase tracking-wider font-bold border-4 border-void hover:bg-orange"
-                >
-                  Arsenal
-                </motion.a>
-                <motion.a
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.15 }}
-                  href="#skills"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-sm uppercase tracking-wider font-bold border-4 border-void hover:bg-orange"
-                >
-                  Skills
-                </motion.a>
-                <motion.a
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                  href="#services"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-sm uppercase tracking-wider font-bold border-4 border-void hover:bg-orange"
-                >
-                  Services
-                </motion.a>
+              <div className="glass-card-elevated mx-4 mb-4 flex flex-col p-4 gap-1">
+                {["about", "projects", "skills", "services"].map((section, i) => (
+                  <motion.a
+                    key={section}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                    href={`#${section}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`px-4 py-3 font-mono text-sm uppercase tracking-wider rounded-lg transition-all duration-150 ${
+                      section === activeSection
+                        ? "text-accent-amber bg-white/[0.03] border-l-2 border-accent-amber"
+                        : "text-text-secondary hover:text-accent-amber hover:bg-white/[0.03]"
+                    }`}
+                  >
+                    {section === "projects" ? "Arsenal" : section.charAt(0).toUpperCase() + section.slice(1)}
+                  </motion.a>
+                ))}
               </div>
             </motion.div>
           )}
