@@ -9,18 +9,18 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Smooth scrolling handled by Lenis */
 }
 
 body {
-  background-color: #0A0E1A;
-  color: #E8ECF4;
+  background-color: #0E1018;
+  color: #E2E6EE;
   min-height: 100vh;
 }
 
 ::selection {
-  background-color: #F59E0B;
-  color: #0A0E1A;
+  background-color: #E5A537;
+  color: #0E1018;
 }
 
 ::-webkit-scrollbar {
@@ -28,21 +28,21 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #151D35;
+  background: #1A2030;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #F59E0B;
+  background: #E5A537;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FBBF24;
+  background: #F0C05C;
 }
 
 @layer components {
   .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.035);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -50,16 +50,16 @@ body {
   }
 
   .glass-card-elevated {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.055);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 0.75rem;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
   }
 
   .glass-nav {
-    background: rgba(15, 22, 41, 0.7);
+    background: rgba(20, 24, 38, 0.75);
     backdrop-filter: blur(20px) saturate(1.2);
     -webkit-backdrop-filter: blur(20px) saturate(1.2);
   }
@@ -69,14 +69,14 @@ body {
   }
 
   .glass-glow-amber:hover {
-    border-color: rgba(245, 158, 11, 0.3);
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.15), 0 0 40px rgba(245, 158, 11, 0.05);
+    border-color: rgba(229, 165, 55, 0.3);
+    box-shadow: 0 0 20px rgba(229, 165, 55, 0.12), 0 0 40px rgba(229, 165, 55, 0.04);
   }
 
   .surface-terminal {
-    background: #0D1117;
+    background: #0E1018;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    border-left: 3px solid #F59E0B;
+    border-left: 3px solid #E5A537;
     border-radius: 0.75rem;
   }
 
@@ -87,7 +87,7 @@ body {
   }
 
   .surface-solid {
-    background: #0F1629;
+    background: #141826;
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 0.75rem;
   }
@@ -98,16 +98,16 @@ body {
   }
 
   .surface-featured {
-    background: rgba(245, 158, 11, 0.04);
+    background: rgba(229, 165, 55, 0.04);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(229, 165, 55, 0.15);
     border-radius: 0.75rem;
   }
 }
 
 .text-gradient-amber {
-  background: linear-gradient(135deg, #F59E0B, #FBBF24);
+  background: linear-gradient(135deg, #E5A537, #F0C05C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

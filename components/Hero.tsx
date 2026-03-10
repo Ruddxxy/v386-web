@@ -1,8 +1,16 @@
 "use client";
 
+import { useRef } from "react";
 import { GithubIcon, LinkedInIcon, EmailIcon } from "./icons";
 import Image from "next/image";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useScroll,
+} from "framer-motion";
+import ChapterLabel from "./ChapterLabel";
+import ScrollIndicator from "./ScrollIndicator";
 
 function TerminalLine({ command, delay }: { command: string; delay: number }) {
   return (
@@ -37,10 +45,19 @@ function TerminalOutput({ lines, delay }: { lines: string[]; delay: number }) {
 }
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const rotateX = useTransform(mouseY, [-150, 150], [8, -8]);
   const rotateY = useTransform(mouseX, [-150, 150], [-8, 8]);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -56,11 +73,16 @@ export default function Hero() {
   }
 
   return (
-    <section className="min-h-screen relative">
-      <div className="relative min-h-screen flex">
+    <section ref={sectionRef} className="min-h-screen relative">
+      <motion.div
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="relative min-h-screen flex"
+      >
         {/* Main Content */}
         <div className="flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-24 pb-12">
           <div className="max-w-3xl">
+            <ChapterLabel number="01" title="identity" />
+
             {/* Logo with magnetic tilt */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -76,7 +98,11 @@ export default function Hero() {
               >
                 <motion.div
                   animate={{ opacity: [0.3, 0.6, 0.3] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                   className="absolute inset-0 rounded-xl bg-accent-amber/10 blur-xl -z-10"
                 />
                 <motion.div
@@ -95,14 +121,14 @@ export default function Hero() {
               </motion.div>
             </motion.div>
 
-            {/* Bold Typography */}
+            {/* Bold Typography — Storytelling headline */}
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold leading-[0.9] tracking-tight mb-2"
             >
-              Systems &
+              I architect systems
               <br />
               <motion.span
                 initial={{ opacity: 0, x: -20 }}
@@ -110,7 +136,7 @@ export default function Hero() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="text-gradient-amber"
               >
-                Security
+                that don&apos;t break.
               </motion.span>
             </motion.h1>
             <motion.div
@@ -120,7 +146,7 @@ export default function Hero() {
               className="mb-8"
             >
               <span className="font-mono text-text-muted text-lg md:text-xl tracking-wide">
-                {"// engineer"}
+                {"// under pressure"}
               </span>
             </motion.div>
 
@@ -130,7 +156,8 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="text-xl md:text-2xl text-text-secondary max-w-xl mb-10 leading-relaxed font-body"
             >
-              Systems Engineer (Python/C++) | Offensive Security | High-Frequency Infrastructure
+              Rust. C++. Zero-copy. I build the tools that other engineers
+              depend on when it actually matters.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -150,13 +177,13 @@ export default function Hero() {
               </motion.a>
 
               <motion.a
-                href="mailto:rudra@vector384.com"
+                href="mailto:mahapatro16@gmail.com"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center justify-center gap-3 px-8 py-4 surface-outline text-text-primary font-mono uppercase tracking-wider text-sm hover:border-white/[0.15] transition-all duration-300"
               >
                 <EmailIcon size={18} />
-                Hire Vector 384
+                Work With Me
               </motion.a>
             </motion.div>
           </div>
@@ -183,8 +210,11 @@ export default function Hero() {
             </div>
 
             {/* Terminal body */}
-            <div className="p-5 space-y-3 bg-scanlines min-h-[280px]">
-              <TerminalLine command="flashaudit scan --repo enterprise-monorepo" delay={0.8} />
+            <div className="p-6 space-y-4 bg-scanlines min-h-[280px]">
+              <TerminalLine
+                command="flashaudit scan --repo enterprise-monorepo"
+                delay={0.8}
+              />
               <TerminalOutput
                 lines={[
                   "Scanning 847,000 files...",
@@ -194,15 +224,15 @@ export default function Hero() {
                 delay={1.1}
               />
 
-              <div className="h-3" />
+              <div className="h-4" />
 
               <TerminalLine command="uptime" delay={1.8} />
               <TerminalOutput
-                lines={["3+ years | 160+ commits | Status: AVAILABLE"]}
+                lines={["3+ years | 160+ commits | shipping since day one"]}
                 delay={2.1}
               />
 
-              <div className="h-3" />
+              <div className="h-4" />
 
               <motion.div
                 initial={{ opacity: 0 }}
@@ -246,7 +276,7 @@ export default function Hero() {
               <LinkedInIcon size={20} />
             </motion.a>
             <motion.a
-              href="mailto:rudra@vector384.com"
+              href="mailto:mahapatro16@gmail.com"
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               className="p-3 surface-outline text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 transition-all duration-300"
@@ -256,7 +286,7 @@ export default function Hero() {
             </motion.a>
           </motion.div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Mobile Terminal Bar */}
       <motion.div
@@ -272,6 +302,8 @@ export default function Hero() {
           </span>
         </div>
       </motion.div>
+
+      <ScrollIndicator />
     </section>
   );
 }

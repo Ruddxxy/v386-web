@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 
 interface NavLinkProps {
   href: string;
@@ -33,6 +34,9 @@ export default function Navbar() {
   const handleScroll = useCallback(() => {
     requestAnimationFrame(() => {
       setScrolled(window.scrollY > 20);
+      if (window.scrollY < window.innerHeight * 0.5) {
+        setActiveSection("");
+      }
     });
   }, []);
 
@@ -42,7 +46,7 @@ export default function Navbar() {
   }, [handleScroll]);
 
   useEffect(() => {
-    const sections = ["about", "projects", "skills", "services"];
+    const sections = ["origin", "projects", "services"];
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -63,6 +67,8 @@ export default function Navbar() {
   }, []);
 
   return (
+    <>
+    <ScrollProgressBar />
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -88,9 +94,8 @@ export default function Navbar() {
           </a>
 
           <div className="hidden md:flex items-center gap-2">
-            <NavLink href="#about" active={activeSection === "about"}>About</NavLink>
+            <NavLink href="#origin" active={activeSection === "origin"}>Origin</NavLink>
             <NavLink href="#projects" active={activeSection === "projects"}>Arsenal</NavLink>
-            <NavLink href="#skills" active={activeSection === "skills"}>Skills</NavLink>
             <NavLink href="#services" active={activeSection === "services"}>Services</NavLink>
           </div>
 
@@ -125,21 +130,25 @@ export default function Navbar() {
               className="md:hidden overflow-hidden"
             >
               <div className="glass-card-elevated mx-4 mb-4 flex flex-col p-4 gap-1">
-                {["about", "projects", "skills", "services"].map((section, i) => (
+                {[
+                  { id: "origin", label: "Origin" },
+                  { id: "projects", label: "Arsenal" },
+                  { id: "services", label: "Services" },
+                ].map((section, i) => (
                   <motion.a
-                    key={section}
+                    key={section.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.05 }}
-                    href={`#${section}`}
+                    href={`#${section.id}`}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`px-4 py-3 font-mono text-sm uppercase tracking-wider rounded-lg transition-all duration-150 ${
-                      section === activeSection
+                      section.id === activeSection
                         ? "text-accent-amber bg-white/[0.03] border-l-2 border-accent-amber"
                         : "text-text-secondary hover:text-accent-amber hover:bg-white/[0.03]"
                     }`}
                   >
-                    {section === "projects" ? "Arsenal" : section.charAt(0).toUpperCase() + section.slice(1)}
+                    {section.label}
                   </motion.a>
                 ))}
               </div>
@@ -148,5 +157,6 @@ export default function Navbar() {
         </AnimatePresence>
       </div>
     </motion.nav>
+    </>
   );
 }

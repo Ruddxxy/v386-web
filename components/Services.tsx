@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import ChapterLabel from "./ChapterLabel";
 
 type SurfaceType = "terminal" | "glass-cyan" | "solid";
 
@@ -35,17 +36,29 @@ function getAccentLine(surface: SurfaceType): string {
   }
 }
 
+function getHoverGlow(surface: SurfaceType): string {
+  switch (surface) {
+    case "terminal":
+    case "solid":
+      return "group-hover:border-accent-amber/25 group-hover:shadow-[0_0_20px_rgba(229,165,55,0.08)]";
+    case "glass-cyan":
+      return "group-hover:border-accent-cyan/25 group-hover:shadow-[0_0_20px_rgba(63,189,212,0.08)]";
+  }
+}
+
 function ServiceCard({ service, index }: { service: Service; index: number }) {
   const surfaceClass = getSurfaceClass(service.surface);
   const accentLine = getAccentLine(service.surface);
+  const hoverGlow = getHoverGlow(service.surface);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -6, transition: { duration: 0.25 } }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true, margin: "-50px" }}
-      className="relative pt-16 h-full"
+      className="group relative pt-16 h-full"
     >
       {/* Large Number */}
       <motion.div
@@ -53,14 +66,14 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
         viewport={{ once: true }}
-        className="absolute -top-4 left-6 text-8xl md:text-9xl font-heading font-bold text-accent-amber/10 leading-none select-none"
+        className="absolute -top-4 left-6 text-8xl md:text-9xl font-heading font-bold text-accent-amber/10 group-hover:text-accent-amber/20 transition-colors duration-300 leading-none select-none"
       >
         {service.number}
       </motion.div>
 
       {/* Card */}
-      <div className={`relative ${surfaceClass} overflow-hidden h-full flex flex-col`}>
-        <div className={`h-[2px] ${accentLine}`} />
+      <div className={`relative ${surfaceClass} ${hoverGlow} overflow-hidden h-full flex flex-col transition-all duration-300`}>
+        <div className={`h-[3px] ${accentLine}`} />
 
         <div className="p-8 flex-1">
           <h3 className="text-2xl md:text-3xl font-heading font-bold mb-4 tracking-tight text-text-primary">
@@ -109,13 +122,13 @@ export default function Services() {
       number: "01",
       title: "Systems Architecture",
       description:
-        "I rewrite slow Python/Node.js bottlenecks in Rust/C++. Expect measurable throughput improvements and lower cloud bills.",
-      outcome: "10x throughput, 60% lower infra costs",
+        "Your Python service is slow? I've rewritten hot paths in Rust that went from minutes to milliseconds. I built FlashAudit this way — zero-copy I/O, memory-mapped files, parallel execution. The result was 10x faster than Gitleaks on the same workload.",
+      outcome: "Your bottleneck, identified and eliminated",
       deliverables: [
-        "Performance profiling",
-        "Rust/C++ rewrites",
-        "Memory optimization",
-        "Throughput benchmarks",
+        "Profiling to find the real hot path",
+        "Rust/C++ rewrite of the critical section",
+        "Zero-copy and memory-mapped I/O where it counts",
+        "Benchmarks proving the improvement",
       ],
       surface: "terminal",
     },
@@ -123,13 +136,13 @@ export default function Services() {
       number: "02",
       title: "Security Instrumentation",
       description:
-        "I audit CI/CD pipelines and inject automated security scanners (SAST/DAST) to prevent vulnerability shipping.",
-      outcome: "Zero secrets in prod, automated compliance",
+        "I built FlashAudit because existing secret scanners were too slow for enterprise repos. I can do the same for your pipeline — scanning that runs in CI, catches credentials before they ship, and doesn't slow down your deploys.",
+      outcome: "Secrets caught before they leave your branch",
       deliverables: [
-        "CI/CD security audit",
-        "SAST/DAST integration",
-        "Secret scanning setup",
-        "Hardening playbook",
+        "CI/CD pipeline hardening",
+        "Custom scanning rules for your codebase",
+        "Pre-commit hooks that actually run fast",
+        "Incident playbook for when something slips",
       ],
       surface: "glass-cyan",
     },
@@ -137,46 +150,58 @@ export default function Services() {
       number: "03",
       title: "MVP Development",
       description:
-        "From database schema to deployed SaaS. I build the full stack — secure by design, fast by default.",
-      outcome: "Ship in weeks, not months",
+        "I've shipped full-stack products end-to-end — trading platforms, SaaS tools, finance apps. Database to deploy, with auth, payments, and monitoring that works. I build for the engineer who inherits the codebase after me.",
+      outcome: "A shipped product, not a prototype",
       deliverables: [
-        "Full-stack implementation",
-        "Database architecture",
-        "Deployment pipeline",
-        "Security-first design",
+        "Full-stack build (Next.js / FastAPI / Flutter)",
+        "Database with proper migrations and indexing",
+        "CI/CD that deploys on merge",
+        "Code clean enough to hand off",
       ],
       surface: "solid",
     },
   ];
 
   return (
-    <section id="services" className="py-24 px-6">
+    <section id="services" className="py-16 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header — dash-line style */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="mb-20"
+          className="mb-12"
         >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-[2px] bg-accent-amber" />
-            <span className="text-sm uppercase tracking-widest font-mono text-text-secondary">
-              Services
-            </span>
-          </div>
+          <ChapterLabel number="04" title="what I build for you" />
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight text-text-primary">
-            Capabilities<span className="text-accent-amber">.</span>
+            What I Build For You<span className="text-accent-amber">.</span>
           </h2>
         </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <ServiceCard key={service.number} service={service} index={index} />
           ))}
         </div>
+
+        {/* Philosophy Quote */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mt-16 max-w-3xl mx-auto text-center"
+        >
+          <span className="text-6xl text-accent-amber/30 font-heading leading-none">&ldquo;</span>
+          <p className="text-xl md:text-2xl italic text-text-secondary font-body leading-relaxed -mt-6">
+            I don&apos;t build software that works in demos. I build software that
+            works at 3 AM when the on-call engineer is staring at a dashboard
+            wondering what went wrong.
+          </p>
+          <span className="text-6xl text-accent-amber/30 font-heading leading-none">&rdquo;</span>
+        </motion.div>
 
         {/* CTA */}
         <motion.div
@@ -184,18 +209,18 @@ export default function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mt-20 text-center"
+          className="mt-16 text-center"
         >
           <motion.a
-            href="mailto:rudra@vector384.com"
+            href="mailto:mahapatro16@gmail.com"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center justify-center gap-3 px-12 py-5 surface-outline border-accent-amber/30 text-text-primary font-mono uppercase tracking-wider text-sm hover:border-accent-amber hover:shadow-glow-amber transition-all duration-300"
+            className="inline-flex items-center justify-center gap-3 px-12 py-5 glass-card border-accent-amber/30 text-accent-amber font-mono uppercase tracking-wider text-sm hover:border-accent-amber hover:shadow-glow-amber transition-all duration-300"
           >
-            Start a Conversation
+            Got a problem worth solving? Let&apos;s talk.
           </motion.a>
           <p className="mt-6 font-mono text-text-muted text-sm">
-            {"// compiled without warnings"}
+            {"// no shortcuts, no compromises"}
           </p>
         </motion.div>
       </div>

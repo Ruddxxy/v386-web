@@ -1,115 +1,71 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GithubIcon } from "./icons";
+import { GithubIcon, EmailIcon } from "./icons";
+import ChapterLabel from "./ChapterLabel";
+import CaseStudy from "./CaseStudy";
 
-type ProjectVariant = "open-source" | "standard" | "private";
+type ProjectCategory = "systems-security" | "fintech" | "fullstack";
+type SurfaceType = "terminal" | "glass-cyan" | "glass-amber" | "outline";
 
 interface Project {
   title: string;
   tagline: string;
+  problem: string;
   techStack: string[];
   description: string;
   highlights: { label: string; text: string }[];
   github?: string;
-  benchmarks?: { label: string; value: string }[];
+  category: ProjectCategory;
+  surface: SurfaceType;
 }
 
-function FeaturedProjectCard({ project }: { project: Project }) {
+function getSurfaceClass(surface: SurfaceType): string {
+  switch (surface) {
+    case "terminal":
+      return "surface-terminal";
+    case "glass-cyan":
+      return "glass-card border-accent-cyan/20";
+    case "glass-amber":
+      return "glass-card glass-glow-amber";
+    case "outline":
+      return "surface-outline";
+  }
+}
+
+function getHoverClass(surface: SurfaceType): string {
+  switch (surface) {
+    case "terminal":
+      return "hover:border-accent-amber/30 hover:shadow-[0_0_15px_rgba(229,165,55,0.06)]";
+    case "glass-cyan":
+      return "hover:border-accent-cyan/30 hover:shadow-[0_0_15px_rgba(63,189,212,0.06)]";
+    case "glass-amber":
+      return "hover:border-accent-amber/30 hover:shadow-[0_0_20px_rgba(229,165,55,0.08)]";
+    case "outline":
+      return "hover:border-white/[0.15] hover:shadow-[0_0_15px_rgba(255,255,255,0.03)]";
+  }
+}
+
+function CategoryMarker({ label }: { label: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
       viewport={{ once: true, margin: "-50px" }}
-      className="surface-featured md:col-span-2 lg:col-span-2"
+      className="py-8"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-        {/* Left: Info */}
-        <div className="p-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="px-2 py-1 text-xs font-mono uppercase tracking-wider bg-accent-amber/20 text-accent-amber rounded">
-              Featured
-            </span>
-            {project.github && (
-              <motion.a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-1.5 surface-outline rounded-lg text-text-secondary hover:text-accent-amber transition-colors duration-300"
-                aria-label={`View ${project.title} on GitHub`}
-              >
-                <GithubIcon size={16} />
-              </motion.a>
-            )}
-          </div>
-
-          <h3 className="text-3xl font-heading font-bold tracking-tight mb-2 text-text-primary">
-            {project.title}
-          </h3>
-          <p className="text-accent-amber font-mono text-sm uppercase tracking-wider mb-4">
-            {project.tagline}
-          </p>
-
-          <div className="flex flex-wrap gap-2 mb-5">
-            {project.techStack.map((tech) => (
-              <span key={tech} className="px-3 py-1 surface-outline rounded-full text-accent-cyan font-mono text-xs">
-                {tech}
-              </span>
-            ))}
-          </div>
-
-          <p className="text-text-secondary font-body leading-relaxed">
-            {project.description}
-          </p>
-        </div>
-
-        {/* Right: Benchmarks */}
-        <div className="p-8 border-t md:border-t-0 md:border-l border-accent-amber/10">
-          <span className="text-sm uppercase tracking-widest font-mono text-accent-amber block mb-5">
-            Benchmarks
-          </span>
-          <div className="space-y-0">
-            {project.benchmarks?.map((b, i) => (
-              <motion.div
-                key={b.label}
-                initial={{ opacity: 0, x: 10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="surface-data-row py-4 flex justify-between items-center"
-              >
-                <span className="text-text-muted font-mono text-sm uppercase tracking-wider">
-                  {b.label}
-                </span>
-                <span className="text-text-primary font-mono text-sm font-medium">
-                  {b.value}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <span className="font-mono text-accent-amber text-sm uppercase tracking-widest">
+        {label}
+      </span>
     </motion.div>
   );
 }
 
-function getVariant(project: Project): ProjectVariant {
-  if (!project.github) return "private";
-  return "open-source";
-}
-
 function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const variant = getVariant(project);
-
-  const cardClass =
-    variant === "private"
-      ? "surface-outline border-dashed"
-      : variant === "open-source"
-        ? "glass-card glass-glow-amber"
-        : "glass-card";
+  const surfaceClass = getSurfaceClass(project.surface);
+  const hoverClass = getHoverClass(project.surface);
+  const isPrivate = !project.github;
 
   return (
     <motion.div
@@ -117,8 +73,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true, margin: "-50px" }}
-      whileHover={{ y: -5 }}
-      className={`${cardClass} h-full flex flex-col`}
+      whileHover={{ y: -8, transition: { duration: 0.25 } }}
+      className={`${surfaceClass} ${hoverClass} h-full flex flex-col transition-all duration-300`}
     >
       <div className="p-6 border-b border-white/[0.06] flex items-start justify-between">
         <div>
@@ -126,13 +82,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <h3 className="text-2xl font-heading font-bold tracking-tight text-text-primary">
               {project.title}
             </h3>
-            {variant === "private" && (
+            {isPrivate && (
               <span className="px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider border border-accent-cyan/30 text-accent-cyan rounded">
                 Private Beta
               </span>
             )}
           </div>
-          <p className="text-accent-amber font-mono text-sm uppercase tracking-wider">{project.tagline}</p>
+          <p className="text-accent-amber font-mono text-sm uppercase tracking-wider">
+            {project.tagline}
+          </p>
         </div>
         {project.github && (
           <motion.a
@@ -150,19 +108,30 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </div>
 
       <div className="p-6 flex-1">
+        <p className="text-sm font-mono text-color-danger/70 mb-4 italic">
+          Problem: {project.problem}
+        </p>
+
         <div className="flex flex-wrap gap-2 mb-4">
           {project.techStack.map((tech) => (
-            <span key={tech} className="px-3 py-1 surface-outline rounded-full text-accent-cyan font-mono text-xs">
+            <span
+              key={tech}
+              className="px-3 py-1 surface-outline rounded-full text-accent-cyan font-mono text-xs"
+            >
               {tech}
             </span>
           ))}
         </div>
-        <p className="text-text-secondary font-body leading-relaxed mb-6">{project.description}</p>
+        <p className="text-text-secondary font-body leading-relaxed mb-6">
+          {project.description}
+        </p>
 
         <div className="space-y-3">
-          {project.highlights.map((h) => (
-            <div key={h.label} className="flex items-start gap-3">
-              <span className="text-accent-amber font-mono text-sm uppercase min-w-[110px] flex-shrink-0">{h.label}:</span>
+          {project.highlights.map((h, hIndex) => (
+            <div key={`${h.label}-${hIndex}`} className="flex items-start gap-3">
+              <span className="text-accent-amber font-mono text-sm uppercase min-w-[90px] flex-shrink-0">
+                {h.label}:
+              </span>
               <span className="text-text-secondary text-sm">{h.text}</span>
             </div>
           ))}
@@ -172,101 +141,306 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   );
 }
 
-export default function Projects() {
-  const featuredProject: Project = {
-    title: "FlashAudit Core",
-    tagline: "Enterprise-Grade Secret Scanner",
-    techStack: ["Rust", "Rayon", "Memmap2"],
+const systemsSecurityProjects: Project[] = [
+  {
+    title: "Proxy Server",
+    tagline: "Native Windows Firewall Proxy",
+    problem:
+      "No lightweight, native Windows solution for inspecting HTTP traffic at the packet level.",
+    techStack: ["C (ANSI/Win32)", "Raw Sockets"],
     description:
-      "A zero-copy security primitive built in Rust designed to replace slow regex scanners. It bypasses performance bottlenecks by using memory mapping and parallel execution.",
-    highlights: [],
-    github: "https://github.com/Ruddxxy/Flash-Audit-Core",
-    benchmarks: [
-      { label: "Scan Speed", value: "847K files / 0.4s" },
-      { label: "vs Gitleaks", value: "~10x faster" },
-      { label: "Rules", value: "66 vendor-specific" },
-      { label: "Output", value: "SARIF 2.1.0" },
+      "A multi-threaded HTTP proxy written in pure C — no frameworks, no dependencies. Inspects every packet for SQL injection and path traversal patterns, then auto-bans offending IPs. Built on raw Win32 threads because the problem didn't need abstractions, it needed speed.",
+    highlights: [
+      {
+        label: "Rate Limit",
+        text: "Auto-bans IPs exceeding 50 requests in 15 seconds.",
+      },
+      {
+        label: "Footprint",
+        text: "Zero external frameworks — pure Win32 threads and raw sockets.",
+      },
     ],
-  };
+    github: "https://github.com/Ruddxxy/mul-proxy-c",
+    category: "systems-security",
+    surface: "terminal",
+  },
+  {
+    title: "CredGuard",
+    tagline: "Identity Security Platform",
+    problem:
+      "Individuals have no visibility into credential leaks across the dark web.",
+    techStack: ["Python", "Streamlit", "PostgreSQL", "Stripe"],
+    description:
+      "A monetized personal SOC that monitors digital identities for credential leaks across dark web dumps and public repos. Integrated Stripe for billing from day one — this isn't a demo, it's a product with paying users and audit-grade PDF reporting.",
+    highlights: [
+      {
+        label: "Monetization",
+        text: "Stripe billing, rate-limiting, and audit-grade PDF reporting.",
+      },
+      {
+        label: "Detection",
+        text: "Risk score (0-100) via anomaly detection on breach data.",
+      },
+    ],
+    github: "https://github.com/Ruddxxy/CredGuard",
+    category: "systems-security",
+    surface: "glass-cyan",
+  },
+  {
+    title: "DataCenter Manager",
+    tagline: "Concurrent Resource Orchestrator",
+    problem:
+      "Simulating data center operations with real concurrency primitives — not toy examples, actual thread-safe resource management.",
+    techStack: ["C++20", "CMake", "Pthreads"],
+    description:
+      "Multi-threaded data center simulation built on raw Pthreads. Mutex-locked resource pools, condition variable signaling, and a custom thread pool. The kind of systems programming that doesn't show up in tutorials but runs under every cloud provider.",
+    highlights: [
+      {
+        label: "Concurrency",
+        text: "Pthreads with mutex-locked pools and condition variable signaling.",
+      },
+      {
+        label: "Architecture",
+        text: "Custom thread pool with work-stealing scheduler.",
+      },
+    ],
+    category: "systems-security",
+    surface: "terminal",
+  },
+  {
+    title: "StegoVault",
+    tagline: "Steganographic Encryption Tool",
+    problem:
+      "Standard encryption is visible — encrypted files announce themselves. Sometimes you need data that doesn't look like data.",
+    techStack: ["Python", "Flask", "AES-256", "LSB Steganography"],
+    description:
+      "Hides AES-256 encrypted payloads inside ordinary images using LSB steganography. The output passes visual inspection and steganalysis tools. Built for scenarios where the existence of the data itself is sensitive — not just its contents.",
+    highlights: [
+      {
+        label: "Evasion",
+        text: "Output survives steganalysis detection tools.",
+      },
+      {
+        label: "Encryption",
+        text: "AES-256 payload encryption before steganographic embedding.",
+      },
+    ],
+    category: "systems-security",
+    surface: "glass-cyan",
+  },
+];
 
-  const projects: Project[] = [
-    {
-      title: "BioStream ML",
-      tagline: "Real-Time Surgical Telemetry Engine",
-      techStack: ["Python", "Redis Streams", "Docker", "Isolation Forest"],
-      description:
-        "A fault-tolerant physiological anomaly detection pipeline for operating rooms. It processes real-time heart rate and SpO2 data without data loss.",
-      highlights: [
-        { label: "Throughput", text: "Handles ~3,000 events/second with sub-5ms latency." },
-        { label: "Resilience", text: "Uses Redis Streams for idempotency, ensuring zero data loss." },
-        { label: "Intelligence", text: "Applies Isolation Forest to detect clinical deterioration in real-time." },
-      ],
-      github: "https://github.com/Ruddxxy/Biostream-ML",
-    },
-    {
-      title: "Proxy Server",
-      tagline: "Native Windows Firewall Proxy",
-      techStack: ["C (ANSI/Win32)", "Raw Sockets"],
-      description:
-        "A multi-threaded HTTP proxy written in pure C that acts as a miniature perimeter firewall. It inspects packets for SQL Injection and Path Traversal attacks.",
-      highlights: [
-        { label: "Defense", text: "Automatically bans IPs that exceed 50 requests in 15 seconds." },
-        { label: "Core", text: "Handles concurrent connections using raw Win32 threads without external frameworks." },
-      ],
-      github: "https://github.com/Ruddxxy/mul-proxy-c",
-    },
-    {
-      title: "CredGuard",
-      tagline: "Identity Security Platform",
-      techStack: ["Python", "Streamlit", "PostgreSQL", "Stripe"],
-      description:
-        'A fully monetized "Personal SOC" that monitors digital identities for credential leaks across the dark web and public repositories.',
-      highlights: [
-        { label: "Product", text: "Integrated Stripe billing, rate-limiting quotas, and audit-grade PDF reporting." },
-        { label: "Analysis", text: "Computes a risk score (0-100) using anomaly detection on breach data." },
-      ],
-      github: "https://github.com/Ruddxxy/CredGuard",
-    },
-    {
-      title: "Algo-Bot",
-      tagline: "High-Frequency Trading Engine",
-      techStack: ["Python", "Upstox API", "Pandas"],
-      description:
-        "An event-driven algorithmic trading bot for the Indian Equity Markets (NSE). Features automated execution pipeline and risk-management kill switches.",
-      highlights: [
-        { label: "Status", text: "Private Beta - Architecting for NSE markets." },
-      ],
-    },
-  ];
+const fintechProjects: Project[] = [
+  {
+    title: "NSE Trading Engine",
+    tagline: "SEBI-Compliant Algorithmic Trading",
+    problem:
+      "Indian equity markets need sub-second execution with regulatory compliance — most retail tools can't do both.",
+    techStack: ["Electron", "React 19", "FastAPI", "Angel One API"],
+    description:
+      "Full-stack trading platform for NSE markets with a desktop-native Electron frontend and FastAPI backend. SEBI-compliant order execution, real-time P&L tracking, and a kill switch that actually works. This is the system that superseded Algo-Bot — same problem, production-grade solution.",
+    highlights: [
+      {
+        label: "Compliance",
+        text: "SEBI-compliant execution with automated circuit breakers.",
+      },
+      {
+        label: "Latency",
+        text: "Sub-second order placement via Angel One SmartAPI.",
+      },
+    ],
+    category: "fintech",
+    surface: "glass-amber",
+  },
+  {
+    title: "GlassVault",
+    tagline: "Encrypted Personal Finance",
+    problem:
+      "Finance apps store your most sensitive data in plaintext databases with cloud-first architectures you can't audit.",
+    techStack: ["Flutter/Dart", "SQLCipher", "Riverpod", "CRDT Sync"],
+    description:
+      "A personal finance tracker where every byte is encrypted at rest with SQLCipher. CRDT-based sync means your data stays consistent across devices without a central server seeing it. Built in Flutter because finance apps should run everywhere.",
+    highlights: [
+      {
+        label: "Security",
+        text: "SQLCipher AES-256 encryption — data encrypted at rest, always.",
+      },
+      {
+        label: "Sync",
+        text: "CRDT-based conflict resolution for offline-first multi-device sync.",
+      },
+    ],
+    category: "fintech",
+    surface: "glass-amber",
+  },
+  {
+    title: "Algo-Bot",
+    tagline: "Early Trading Architecture",
+    problem:
+      "Manual trading in Indian equity markets cannot compete with algorithmic speed.",
+    techStack: ["Python", "Upstox API", "Pandas"],
+    description:
+      "The first iteration of my trading engine — event-driven execution for NSE with automated risk-management kill switches. Taught me what retail APIs can and can't do, and directly led to the NSE Trading Engine rewrite with proper infrastructure.",
+    highlights: [
+      {
+        label: "Evolution",
+        text: "Superseded by NSE Trading Engine — lessons from this built that.",
+      },
+      {
+        label: "Risk Mgmt",
+        text: "Automated kill switches for position limits and drawdown.",
+      },
+    ],
+    category: "fintech",
+    surface: "glass-amber",
+  },
+];
 
+const fullstackProjects: Project[] = [
+  {
+    title: "BioStream ML",
+    tagline: "Real-Time Surgical Telemetry Engine",
+    problem:
+      "Operating rooms lack real-time anomaly detection for patient vitals — clinicians catch deterioration by eye, minutes too late.",
+    techStack: ["Python", "Redis Streams", "Docker", "Isolation Forest"],
+    description:
+      "A fault-tolerant pipeline that processes heart rate and SpO2 data in real time, flagging clinical deterioration before a human would notice. Redis Streams for exactly-once delivery, Isolation Forest for anomaly detection. Zero data loss by design.",
+    highlights: [
+      {
+        label: "Throughput",
+        text: "~3,000 events/second with sub-5ms latency.",
+      },
+      {
+        label: "Reliability",
+        text: "Zero data loss via Redis Streams idempotency.",
+      },
+      {
+        label: "Detection",
+        text: "Real-time clinical deterioration flagging with Isolation Forest.",
+      },
+    ],
+    github: "https://github.com/Ruddxxy/Biostream-ML",
+    category: "fullstack",
+    surface: "outline",
+  },
+  {
+    title: "Staleness Scanner",
+    tagline: "Dependency Freshness Monitor",
+    problem:
+      "Engineering teams lose track of outdated dependencies until a CVE forces a fire drill.",
+    techStack: ["Next.js", "FastAPI", "PostgreSQL", "Redis", "arq"],
+    description:
+      "A full-stack tool that scans repos on a schedule, scores dependency freshness, and flags staleness before it becomes a security incident. Background workers via arq, PostgreSQL for persistence, Redis for caching. Built so engineering leads can see the health of every repo at a glance.",
+    highlights: [
+      {
+        label: "Pipeline",
+        text: "Background scanning via arq workers with Redis-backed queue.",
+      },
+      {
+        label: "Visibility",
+        text: "Per-repo freshness scores with historical trend tracking.",
+      },
+    ],
+    category: "fullstack",
+    surface: "outline",
+  },
+  {
+    title: "Warp P2P",
+    tagline: "Peer-to-Peer File Transfer",
+    problem:
+      "Sending large files still requires uploading to a server first — slow, wasteful, and a privacy concern.",
+    techStack: ["TypeScript", "WebRTC", "Node.js"],
+    description:
+      "Direct browser-to-browser file transfer using WebRTC data channels. No upload, no server in the middle, no file size limits. The connection is peer-to-peer — your file goes from your machine to theirs, and nobody else sees it.",
+    highlights: [
+      {
+        label: "Transfer",
+        text: "Direct P2P via WebRTC — no intermediate server storage.",
+      },
+      {
+        label: "Privacy",
+        text: "Files never touch a third-party server.",
+      },
+    ],
+    github: "https://github.com/Ruddxxy/warp-p2p",
+    category: "fullstack",
+    surface: "outline",
+  },
+];
+
+export default function Projects() {
   return (
-    <section id="projects" className="py-24 px-6">
+    <section id="projects" className="py-16 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header — code comment style */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="mb-16"
+          className="mb-12"
         >
-          <div className="font-mono text-text-muted text-sm mb-6 tracking-wider">
-            {"// 001 — projects"}
-          </div>
+          <ChapterLabel number="03" title="the arsenal" />
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight text-text-primary">
             The Arsenal<span className="text-accent-amber">.</span>
           </h2>
         </motion.div>
 
-        {/* Featured Project */}
-        <div className="mb-8">
-          <FeaturedProjectCard project={featuredProject} />
+        {/* FlashAudit Case Study */}
+        <CaseStudy />
+
+        {/* Mid-section CTA */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <motion.a
+            href="mailto:mahapatro16@gmail.com"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-flex items-center gap-2 px-6 py-3 surface-outline text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 font-mono text-sm uppercase tracking-wider transition-all duration-300"
+          >
+            <EmailIcon size={16} />
+            Like what you see? Let&apos;s talk.
+          </motion.a>
+        </motion.div>
+
+        {/* Systems & Security */}
+        <CategoryMarker label="// systems & security" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {systemsSecurityProjects.map((project, index) => (
+            <ProjectCard
+              key={project.title}
+              project={project}
+              index={index}
+            />
+          ))}
         </div>
 
-        {/* Projects Grid */}
+        {/* Fintech & Trading */}
+        <CategoryMarker label="// fintech & trading" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <ProjectCard key={project.title} project={project} index={index} />
+          {fintechProjects.map((project, index) => (
+            <ProjectCard
+              key={project.title}
+              project={project}
+              index={index}
+            />
+          ))}
+        </div>
+
+        {/* Full-Stack Products */}
+        <CategoryMarker label="// full-stack products" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {fullstackProjects.map((project, index) => (
+            <ProjectCard
+              key={project.title}
+              project={project}
+              index={index}
+            />
           ))}
         </div>
       </div>
