@@ -78,8 +78,28 @@ export default function Hero() {
         style={{ y: heroY, opacity: heroOpacity }}
         className="relative min-h-screen flex"
       >
+        {/* Atmospheric centered photo */}
+        <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+          <div className="relative w-[480px] h-[480px] md:w-[550px] md:h-[550px]">
+            <div
+              className="absolute inset-0 z-10"
+              style={{
+                background:
+                  "radial-gradient(circle, transparent 20%, #0E1018 70%)",
+              }}
+            />
+            <Image
+              src="/pfp.jpeg"
+              alt="Rudra Mahapatro"
+              width={550}
+              height={550}
+              className="w-full h-full object-cover grayscale opacity-40 mix-blend-luminosity"
+            />
+          </div>
+        </div>
+
         {/* Main Content */}
-        <div className="flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-24 pb-12">
+        <div className="flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-24 pb-12 z-10">
           <div className="max-w-3xl">
             <ChapterLabel number="01" title="identity" />
 
@@ -194,7 +214,7 @@ export default function Hero() {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="hidden lg:flex flex-col justify-center w-[420px] px-8 py-12"
+          className="hidden lg:flex flex-col justify-center w-[420px] px-8 py-12 z-10"
         >
           <div className="surface-terminal overflow-hidden">
             {/* Terminal header bar */}
