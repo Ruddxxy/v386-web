@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "VECTOR 384 — Rudra Mahapatro, Systems Engineer";
+export const alt = "Rudra Mahapatro — Systems Engineer | Rust, C++, Offensive Security | VECTOR 384";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
