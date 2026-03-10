@@ -89,10 +89,11 @@ export default function Hero() {
               }}
             />
             <Image
-              src="/pfp.jpeg"
-              alt="Rudra Mahapatro"
+              src="/pfp.webp"
+              alt="Rudra Mahapatro — Systems Engineer specializing in Rust and C++"
               width={550}
               height={550}
+              priority
               className="w-full h-full object-cover grayscale opacity-40 mix-blend-luminosity"
             />
           </div>
@@ -132,9 +133,10 @@ export default function Hero() {
                 >
                   <Image
                     src="/logo.png"
-                    alt="Vector 384"
+                    alt="VECTOR 384 — Systems Engineering Portfolio"
                     width={180}
                     height={60}
+                    priority
                     className="h-12 w-auto mix-blend-screen"
                   />
                 </motion.div>
