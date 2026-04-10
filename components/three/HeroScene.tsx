@@ -1,7 +1,20 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Clock,
+  Color,
+  IcosahedronGeometry,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  Points,
+  PointsMaterial,
+  Scene,
+  WebGLRenderer,
+} from "three";
 
 /**
  * Hero scene — vanilla three.js, no React Three Fiber.
@@ -25,8 +38,8 @@ import * as THREE from "three";
 
 const PARTICLE_COUNT = 280;
 const PARTICLE_RADIUS = 6;
-const AMBER = new THREE.Color("#E5A537");
-const CYAN = new THREE.Color("#3FBDD4");
+const AMBER = new Color("#E5A537");
+const CYAN = new Color("#3FBDD4");
 
 export default function HeroScene() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,7 +49,7 @@ export default function HeroScene() {
     if (!container) return;
 
     // ─── Renderer ─────────────────────────────────────────────
-    const renderer = new THREE.WebGLRenderer({
+    const renderer = new WebGLRenderer({
       antialias: true,
       alpha: true,
       powerPreference: "low-power",
@@ -50,8 +63,8 @@ export default function HeroScene() {
     container.appendChild(renderer.domElement);
 
     // ─── Scene + Camera ───────────────────────────────────────
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(
       50,
       initialWidth / initialHeight,
       0.1,
@@ -60,14 +73,14 @@ export default function HeroScene() {
     camera.position.set(0, 0, 8);
 
     // ─── Wireframe icosahedron ────────────────────────────────
-    const wireframeGeometry = new THREE.IcosahedronGeometry(2.2, 1);
-    const wireframeMaterial = new THREE.MeshBasicMaterial({
+    const wireframeGeometry = new IcosahedronGeometry(2.2, 1);
+    const wireframeMaterial = new MeshBasicMaterial({
       color: AMBER,
       wireframe: true,
       transparent: true,
       opacity: 0.18,
     });
-    const wireframe = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+    const wireframe = new Mesh(wireframeGeometry, wireframeMaterial);
     scene.add(wireframe);
 
     // ─── Particle field ───────────────────────────────────────
@@ -90,17 +103,14 @@ export default function HeroScene() {
       colors[i * 3 + 2] = c.b;
     }
 
-    const particleGeometry = new THREE.BufferGeometry();
+    const particleGeometry = new BufferGeometry();
     particleGeometry.setAttribute(
       "position",
-      new THREE.BufferAttribute(positions, 3),
+      new BufferAttribute(positions, 3),
     );
-    particleGeometry.setAttribute(
-      "color",
-      new THREE.BufferAttribute(colors, 3),
-    );
+    particleGeometry.setAttribute("color", new BufferAttribute(colors, 3));
 
-    const particleMaterial = new THREE.PointsMaterial({
+    const particleMaterial = new PointsMaterial({
       size: 0.04,
       vertexColors: true,
       transparent: true,
@@ -108,13 +118,14 @@ export default function HeroScene() {
       sizeAttenuation: true,
     });
 
-    const particles = new THREE.Points(particleGeometry, particleMaterial);
+    const particles = new Points(particleGeometry, particleMaterial);
     scene.add(particles);
 
     // ─── Animation loop ───────────────────────────────────────
-    const clock = new THREE.Clock();
+    const clock = new Clock();
     let rafId = 0;
-    let isVisible = !document.hidden;
+    let tabVisible = !document.hidden;
+    let inViewport = true;
 
     function tick() {
       const delta = clock.getDelta();
@@ -129,8 +140,12 @@ export default function HeroScene() {
       rafId = requestAnimationFrame(tick);
     }
 
+    function shouldRun() {
+      return tabVisible && inViewport;
+    }
+
     function startLoop() {
-      if (rafId) return;
+      if (rafId || !shouldRun()) return;
       clock.start();
       rafId = requestAnimationFrame(tick);
     }
@@ -141,18 +156,34 @@ export default function HeroScene() {
       rafId = 0;
     }
 
-    if (isVisible) startLoop();
+    startLoop();
 
-    // ─── Visibility handling — save battery when tab hidden ───
+    // ─── Tab visibility — save battery when tab hidden ────────
     function onVisibilityChange() {
-      isVisible = !document.hidden;
-      if (isVisible) {
+      tabVisible = !document.hidden;
+      if (shouldRun()) {
         startLoop();
       } else {
         stopLoop();
       }
     }
     document.addEventListener("visibilitychange", onVisibilityChange);
+
+    // ─── Viewport visibility — pause when scrolled away ───────
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          inViewport = entry.isIntersecting;
+        }
+        if (shouldRun()) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { threshold: 0, rootMargin: "100px" },
+    );
+    intersectionObserver.observe(container);
 
     // ─── Resize handling ──────────────────────────────────────
     const resizeObserver = new ResizeObserver((entries) => {
@@ -169,6 +200,7 @@ export default function HeroScene() {
     // ─── Cleanup ──────────────────────────────────────────────
     return () => {
       stopLoop();
+      intersectionObserver.disconnect();
       resizeObserver.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
 

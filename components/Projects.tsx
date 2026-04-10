@@ -427,6 +427,32 @@ const fullstackProjects: Project[] = [
   },
 ];
 
+// Precompute MasonryGrid items at module load — no React-side allocation
+// per render, no closure capture of stale props.
+function buildMasonryItems(projects: Project[]) {
+  return projects.map((project, index) => ({
+    key: project.title,
+    registryKeys: {
+      problem: `${project.registryPrefix}:problem`,
+      description: `${project.registryPrefix}:desc`,
+    },
+    highlightCount: project.highlights.length,
+    techStackCount: project.techStack.length,
+    render: (style: React.CSSProperties) => (
+      <ProjectCard
+        key={project.title}
+        project={project}
+        index={index}
+        style={style}
+      />
+    ),
+  }));
+}
+
+const SYSTEMS_MASONRY_ITEMS = buildMasonryItems(systemsSecurityProjects);
+const FINTECH_MASONRY_ITEMS = buildMasonryItems(fintechProjects);
+const FULLSTACK_MASONRY_ITEMS = buildMasonryItems(fullstackProjects);
+
 export default function Projects() {
   return (
     <section id="projects" className="py-16 px-6 relative">
@@ -467,9 +493,8 @@ export default function Projects() {
         >
           <motion.a
             href="mailto:rudranarayanmohapatro@gmail.com"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center gap-2 px-6 py-3 surface-outline text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 font-mono text-sm uppercase tracking-wider transition-all duration-300"
+            whileTap={{ scale: 0.97 }}
+            className="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl font-mono text-sm uppercase tracking-wider"
           >
             <EmailIcon size={16} />
             Like what you see? Let&apos;s talk.
@@ -478,69 +503,15 @@ export default function Projects() {
 
         {/* Systems & Security */}
         <CategoryMarker label="// systems & security" />
-        <MasonryGrid
-          items={systemsSecurityProjects.map((project, index) => ({
-            key: project.title,
-            registryKeys: {
-              problem: `${project.registryPrefix}:problem`,
-              description: `${project.registryPrefix}:desc`,
-            },
-            highlightCount: project.highlights.length,
-            techStackCount: project.techStack.length,
-            render: (style: React.CSSProperties) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={index}
-                style={style}
-              />
-            ),
-          }))}
-        />
+        <MasonryGrid items={SYSTEMS_MASONRY_ITEMS} />
 
         {/* Fintech & Trading */}
         <CategoryMarker label="// fintech & trading" />
-        <MasonryGrid
-          items={fintechProjects.map((project, index) => ({
-            key: project.title,
-            registryKeys: {
-              problem: `${project.registryPrefix}:problem`,
-              description: `${project.registryPrefix}:desc`,
-            },
-            highlightCount: project.highlights.length,
-            techStackCount: project.techStack.length,
-            render: (style: React.CSSProperties) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={index}
-                style={style}
-              />
-            ),
-          }))}
-        />
+        <MasonryGrid items={FINTECH_MASONRY_ITEMS} />
 
         {/* Full-Stack Products */}
         <CategoryMarker label="// full-stack products" />
-        <MasonryGrid
-          items={fullstackProjects.map((project, index) => ({
-            key: project.title,
-            registryKeys: {
-              problem: `${project.registryPrefix}:problem`,
-              description: `${project.registryPrefix}:desc`,
-            },
-            highlightCount: project.highlights.length,
-            techStackCount: project.techStack.length,
-            render: (style: React.CSSProperties) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={index}
-                style={style}
-              />
-            ),
-          }))}
-        />
+        <MasonryGrid items={FULLSTACK_MASONRY_ITEMS} />
       </div>
     </section>
   );

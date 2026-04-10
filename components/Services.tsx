@@ -189,56 +189,56 @@ function ServiceCard({
   );
 }
 
+const SERVICES: Service[] = [
+  {
+    number: "01",
+    title: "Systems Architecture",
+    registryKey: "service:systems-architecture:desc",
+    description:
+      "Your Python service is slow? I've rewritten hot paths in Rust that went from minutes to milliseconds. I built FlashAudit this way — zero-copy I/O, memory-mapped files, parallel execution. The result was 10x faster than Gitleaks on the same workload.",
+    outcome: "Your bottleneck, identified and eliminated",
+    deliverables: [
+      "Profiling to find the real hot path",
+      "Rust/C++ rewrite of the critical section",
+      "Zero-copy and memory-mapped I/O where it counts",
+      "Benchmarks proving the improvement",
+    ],
+    surface: "terminal",
+  },
+  {
+    number: "02",
+    title: "Security Instrumentation",
+    registryKey: "service:security-instrumentation:desc",
+    description:
+      "I built FlashAudit because existing secret scanners were too slow for enterprise repos. I can do the same for your pipeline — scanning that runs in CI, catches credentials before they ship, and doesn't slow down your deploys.",
+    outcome: "Secrets caught before they leave your branch",
+    deliverables: [
+      "CI/CD pipeline hardening",
+      "Custom scanning rules for your codebase",
+      "Pre-commit hooks that actually run fast",
+      "Incident playbook for when something slips",
+    ],
+    surface: "glass-cyan",
+  },
+  {
+    number: "03",
+    title: "MVP Development",
+    registryKey: "service:mvp-development:desc",
+    description:
+      "I've shipped full-stack products end-to-end — trading platforms, SaaS tools, finance apps. Database to deploy, with auth, payments, and monitoring that works. I build for the engineer who inherits the codebase after me.",
+    outcome: "A shipped product, not a prototype",
+    deliverables: [
+      "Full-stack build (Next.js / FastAPI / Flutter)",
+      "Database with proper migrations and indexing",
+      "CI/CD that deploys on merge",
+      "Code clean enough to hand off",
+    ],
+    surface: "solid",
+  },
+];
+
 export default function Services() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-
-  const services: Service[] = [
-    {
-      number: "01",
-      title: "Systems Architecture",
-      registryKey: "service:systems-architecture:desc",
-      description:
-        "Your Python service is slow? I've rewritten hot paths in Rust that went from minutes to milliseconds. I built FlashAudit this way — zero-copy I/O, memory-mapped files, parallel execution. The result was 10x faster than Gitleaks on the same workload.",
-      outcome: "Your bottleneck, identified and eliminated",
-      deliverables: [
-        "Profiling to find the real hot path",
-        "Rust/C++ rewrite of the critical section",
-        "Zero-copy and memory-mapped I/O where it counts",
-        "Benchmarks proving the improvement",
-      ],
-      surface: "terminal",
-    },
-    {
-      number: "02",
-      title: "Security Instrumentation",
-      registryKey: "service:security-instrumentation:desc",
-      description:
-        "I built FlashAudit because existing secret scanners were too slow for enterprise repos. I can do the same for your pipeline — scanning that runs in CI, catches credentials before they ship, and doesn't slow down your deploys.",
-      outcome: "Secrets caught before they leave your branch",
-      deliverables: [
-        "CI/CD pipeline hardening",
-        "Custom scanning rules for your codebase",
-        "Pre-commit hooks that actually run fast",
-        "Incident playbook for when something slips",
-      ],
-      surface: "glass-cyan",
-    },
-    {
-      number: "03",
-      title: "MVP Development",
-      registryKey: "service:mvp-development:desc",
-      description:
-        "I've shipped full-stack products end-to-end — trading platforms, SaaS tools, finance apps. Database to deploy, with auth, payments, and monitoring that works. I build for the engineer who inherits the codebase after me.",
-      outcome: "A shipped product, not a prototype",
-      deliverables: [
-        "Full-stack build (Next.js / FastAPI / Flutter)",
-        "Database with proper migrations and indexing",
-        "CI/CD that deploys on merge",
-        "Code clean enough to hand off",
-      ],
-      surface: "solid",
-    },
-  ];
 
   return (
     <section id="services" className="py-16 px-6">
@@ -259,7 +259,7 @@ export default function Services() {
 
         {/* Services Accordion */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+          {SERVICES.map((service, index) => (
             <ServiceCard
               key={service.number}
               service={service}
