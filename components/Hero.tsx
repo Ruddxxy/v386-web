@@ -7,6 +7,7 @@ import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
 import ChapterLabel from "./ChapterLabel";
 import ScrollIndicator from "./ScrollIndicator";
 import ParallaxShapes from "./ParallaxShapes";
+import HeroSceneLazy from "./three/HeroSceneLazy";
 
 function TerminalLine({ command, delay }: { command: string; delay: number }) {
   return (
@@ -70,6 +71,10 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} className="min-h-screen relative">
+      {/* R3F particle field + wireframe — lazy loaded behind everything */}
+      <div className="absolute inset-0 pointer-events-none">
+        <HeroSceneLazy />
+      </div>
       <ParallaxShapes />
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
