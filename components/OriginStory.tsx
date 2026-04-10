@@ -5,6 +5,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import ChapterLabel from "./ChapterLabel";
 import TechStack from "./TechStack";
 import OriginBackground from "./OriginBackground";
+import PretextObstacleText from "./pretext/PretextObstacleText";
+import { ORIGIN_TEXTS } from "@/lib/pretext-registry";
 
 interface NarrativeBlockProps {
   children: React.ReactNode;
@@ -147,7 +149,7 @@ export default function OriginStory() {
             </p>
           </NarrativeBlock>
 
-          {/* The Path */}
+          {/* The Path — text flows around TechStack on desktop */}
           <NarrativeBlock
             scrollYProgress={scrollYProgress}
             rangeStart={0.25}
@@ -156,16 +158,20 @@ export default function OriginStory() {
             <h3 className="font-mono text-accent-amber text-sm uppercase tracking-widest mb-4">
               The Path
             </h3>
-            <p className="text-lg md:text-xl leading-relaxed text-text-secondary font-body">
-              Started with Python. Hit the ceiling fast &mdash; try scanning a
-              million files when your runtime has a GIL. So I picked up C++, then
-              Rust. Not from tutorials &mdash; from shipping real systems and
-              debugging real failures. Offensive security taught me how things
-              actually break. Algorithmic trading taught me that 50ms of latency
-              is the difference between profit and loss. Every skill I picked up,
-              I picked up because I needed it to solve a problem nothing else could.
-            </p>
-            <TechStack />
+            <PretextObstacleText
+              text={ORIGIN_TEXTS["origin:the-path"].text}
+              registryKey="origin:the-path"
+              fontKey="body-xl"
+              lineHeight={32}
+              obstacle={{
+                top: 0,
+                height: 280,
+                width: 280,
+                side: "right",
+                gap: 24,
+              }}
+              obstacleContent={<TechStack />}
+            />
           </NarrativeBlock>
 
           {/* The Mission */}

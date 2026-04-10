@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SplashProvider } from "@/components/SplashProvider";
 import SplashScreen from "@/components/SplashScreen";
 import SmoothScroller from "@/components/SmoothScroller";
+import { PretextProvider } from "@/components/pretext/PretextProvider";
 import "./globals.css";
 
 const syne = Syne({
@@ -362,7 +363,9 @@ export default function RootLayout({
         />
         <SplashProvider>
           <SplashScreen />
-          <SmoothScroller>{children}</SmoothScroller>
+          <SmoothScroller>
+            <PretextProvider>{children}</PretextProvider>
+          </SmoothScroller>
         </SplashProvider>
         <Analytics />
       </body>

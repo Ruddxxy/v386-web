@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { GithubIcon, EmailIcon } from "./icons";
 import ChapterLabel from "./ChapterLabel";
 import CaseStudy from "./CaseStudy";
+import MasonryGrid from "./MasonryGrid";
 
 type ProjectCategory = "systems-security" | "fintech" | "fullstack";
 type SurfaceType = "terminal" | "glass-cyan" | "glass-amber" | "outline";
@@ -11,6 +12,7 @@ type SurfaceType = "terminal" | "glass-cyan" | "glass-amber" | "outline";
 interface Project {
   title: string;
   tagline: string;
+  registryPrefix: string;
   problem: string;
   techStack: string[];
   description: string;
@@ -62,7 +64,15 @@ function CategoryMarker({ label }: { label: string }) {
   );
 }
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({
+  project,
+  index,
+  style,
+}: {
+  project: Project;
+  index: number;
+  style?: React.CSSProperties;
+}) {
   const surfaceClass = getSurfaceClass(project.surface);
   const hoverClass = getHoverClass(project.surface);
   const isPrivate = !project.github;
@@ -74,7 +84,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true, margin: "-50px" }}
       whileHover={{ y: -8, transition: { duration: 0.25 } }}
-      className={`${surfaceClass} ${hoverClass} h-full flex flex-col transition-all duration-300`}
+      className={`${surfaceClass} ${hoverClass} flex flex-col transition-all duration-300`}
+      style={style}
     >
       <div className="p-6 border-b border-white/[0.06] flex items-start justify-between">
         <div>
@@ -145,6 +156,7 @@ const systemsSecurityProjects: Project[] = [
   {
     title: "Proxy Server",
     tagline: "Native Windows Firewall Proxy",
+    registryPrefix: "project:proxy-server",
     problem:
       "No lightweight, native Windows solution for inspecting HTTP traffic at the packet level.",
     techStack: ["C (ANSI/Win32)", "Raw Sockets"],
@@ -167,6 +179,7 @@ const systemsSecurityProjects: Project[] = [
   {
     title: "CredGuard",
     tagline: "Identity Security Platform",
+    registryPrefix: "project:credguard",
     problem:
       "Individuals have no visibility into credential leaks across the dark web.",
     techStack: ["Python", "Streamlit", "PostgreSQL", "Stripe"],
@@ -189,6 +202,7 @@ const systemsSecurityProjects: Project[] = [
   {
     title: "DataCenter Manager",
     tagline: "Concurrent Resource Orchestrator",
+    registryPrefix: "project:datacenter-manager",
     problem:
       "Simulating data center operations with real concurrency primitives — not toy examples, actual thread-safe resource management.",
     techStack: ["C++20", "CMake", "Pthreads"],
@@ -210,6 +224,7 @@ const systemsSecurityProjects: Project[] = [
   {
     title: "StegoVault",
     tagline: "Steganographic Encryption Tool",
+    registryPrefix: "project:stegovault",
     problem:
       "Standard encryption is visible — encrypted files announce themselves. Sometimes you need data that doesn't look like data.",
     techStack: ["Python", "Flask", "AES-256", "LSB Steganography"],
@@ -234,6 +249,7 @@ const fintechProjects: Project[] = [
   {
     title: "NSE Trading Engine",
     tagline: "SEBI-Compliant Algorithmic Trading",
+    registryPrefix: "project:nse-trading",
     problem:
       "Indian equity markets need sub-second execution with regulatory compliance — most retail tools can't do both.",
     techStack: ["Electron", "React 19", "FastAPI", "Angel One API"],
@@ -255,6 +271,7 @@ const fintechProjects: Project[] = [
   {
     title: "GlassVault",
     tagline: "Encrypted Personal Finance",
+    registryPrefix: "project:glassvault",
     problem:
       "Finance apps store your most sensitive data in plaintext databases with cloud-first architectures you can't audit.",
     techStack: ["Flutter/Dart", "SQLCipher", "Riverpod", "CRDT Sync"],
@@ -276,6 +293,7 @@ const fintechProjects: Project[] = [
   {
     title: "Algo-Bot",
     tagline: "Early Trading Architecture",
+    registryPrefix: "project:algo-bot",
     problem:
       "Manual trading in Indian equity markets cannot compete with algorithmic speed.",
     techStack: ["Python", "Upstox API", "Pandas"],
@@ -300,6 +318,7 @@ const fullstackProjects: Project[] = [
   {
     title: "BioStream ML",
     tagline: "Real-Time Surgical Telemetry Engine",
+    registryPrefix: "project:biostream-ml",
     problem:
       "Operating rooms lack real-time anomaly detection for patient vitals — clinicians catch deterioration by eye, minutes too late.",
     techStack: ["Python", "Redis Streams", "Docker", "Isolation Forest"],
@@ -326,6 +345,7 @@ const fullstackProjects: Project[] = [
   {
     title: "Staleness Scanner",
     tagline: "Dependency Freshness Monitor",
+    registryPrefix: "project:staleness-scanner",
     problem:
       "Engineering teams lose track of outdated dependencies until a CVE forces a fire drill.",
     techStack: ["Next.js", "FastAPI", "PostgreSQL", "Redis", "arq"],
@@ -347,6 +367,7 @@ const fullstackProjects: Project[] = [
   {
     title: "Warp P2P",
     tagline: "Peer-to-Peer File Transfer",
+    registryPrefix: "project:warp-p2p",
     problem:
       "Sending large files still requires uploading to a server first — slow, wasteful, and a privacy concern.",
     techStack: ["TypeScript", "WebRTC", "Node.js"],
@@ -410,39 +431,69 @@ export default function Projects() {
 
         {/* Systems & Security */}
         <CategoryMarker label="// systems & security" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {systemsSecurityProjects.map((project, index) => (
-            <ProjectCard
-              key={project.title}
-              project={project}
-              index={index}
-            />
-          ))}
-        </div>
+        <MasonryGrid
+          items={systemsSecurityProjects.map((project, index) => ({
+            key: project.title,
+            registryKeys: {
+              problem: `${project.registryPrefix}:problem`,
+              description: `${project.registryPrefix}:desc`,
+            },
+            highlightCount: project.highlights.length,
+            techStackCount: project.techStack.length,
+            render: (style: React.CSSProperties) => (
+              <ProjectCard
+                key={project.title}
+                project={project}
+                index={index}
+                style={style}
+              />
+            ),
+          }))}
+        />
 
         {/* Fintech & Trading */}
         <CategoryMarker label="// fintech & trading" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {fintechProjects.map((project, index) => (
-            <ProjectCard
-              key={project.title}
-              project={project}
-              index={index}
-            />
-          ))}
-        </div>
+        <MasonryGrid
+          items={fintechProjects.map((project, index) => ({
+            key: project.title,
+            registryKeys: {
+              problem: `${project.registryPrefix}:problem`,
+              description: `${project.registryPrefix}:desc`,
+            },
+            highlightCount: project.highlights.length,
+            techStackCount: project.techStack.length,
+            render: (style: React.CSSProperties) => (
+              <ProjectCard
+                key={project.title}
+                project={project}
+                index={index}
+                style={style}
+              />
+            ),
+          }))}
+        />
 
         {/* Full-Stack Products */}
         <CategoryMarker label="// full-stack products" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {fullstackProjects.map((project, index) => (
-            <ProjectCard
-              key={project.title}
-              project={project}
-              index={index}
-            />
-          ))}
-        </div>
+        <MasonryGrid
+          items={fullstackProjects.map((project, index) => ({
+            key: project.title,
+            registryKeys: {
+              problem: `${project.registryPrefix}:problem`,
+              description: `${project.registryPrefix}:desc`,
+            },
+            highlightCount: project.highlights.length,
+            techStackCount: project.techStack.length,
+            render: (style: React.CSSProperties) => (
+              <ProjectCard
+                key={project.title}
+                project={project}
+                index={index}
+                style={style}
+              />
+            ),
+          }))}
+        />
       </div>
     </section>
   );
