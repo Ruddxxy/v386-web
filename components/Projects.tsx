@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { GithubIcon, EmailIcon } from "./icons";
 import ChapterLabel from "./ChapterLabel";
-import CaseStudy from "./CaseStudy";
 import MasonryGrid from "./MasonryGrid";
 
 type ProjectCategory = "systems-security" | "fintech" | "fullstack";
@@ -139,7 +138,10 @@ function ProjectCard({
 
         <div className="space-y-3">
           {project.highlights.map((h, hIndex) => (
-            <div key={`${h.label}-${hIndex}`} className="flex items-start gap-3">
+            <div
+              key={`${h.label}-${hIndex}`}
+              className="flex items-start gap-3"
+            >
               <span className="text-accent-amber font-mono text-sm uppercase min-w-[90px] flex-shrink-0">
                 {h.label}:
               </span>
@@ -407,9 +409,6 @@ export default function Projects() {
           </h2>
         </motion.div>
 
-        {/* FlashAudit Case Study */}
-        <CaseStudy />
-
         {/* Mid-section CTA */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -419,7 +418,7 @@ export default function Projects() {
           className="text-center mb-16"
         >
           <motion.a
-            href="mailto:mahapatro16@gmail.com"
+            href="mailto:rudranarayanmohapatro@gmail.com"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="inline-flex items-center gap-2 px-6 py-3 surface-outline text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 font-mono text-sm uppercase tracking-wider transition-all duration-300"

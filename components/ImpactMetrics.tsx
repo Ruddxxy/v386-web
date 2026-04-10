@@ -7,12 +7,28 @@ interface Metric {
   value: number;
   suffix: string;
   label: string;
+  sublabel: string;
 }
 
 const METRICS: Metric[] = [
-  { value: 847, suffix: "K+", label: "files scanned per second" },
-  { value: 10, suffix: "x", label: "faster than existing tools" },
-  { value: 5, suffix: "ms", label: "average latency" },
+  {
+    value: 847,
+    suffix: "K+",
+    label: "peak throughput",
+    sublabel: "files/sec at production scale",
+  },
+  {
+    value: 10,
+    suffix: "x",
+    label: "average speedup delivered",
+    sublabel: "vs. baseline tooling",
+  },
+  {
+    value: 5,
+    suffix: "ms",
+    label: "minimum latency achieved",
+    sublabel: "p50 across hot paths",
+  },
 ];
 
 export default function ImpactMetrics() {
@@ -20,7 +36,8 @@ export default function ImpactMetrics() {
     <section className="py-16 px-6">
       <div className="max-w-7xl mx-auto">
         <p className="font-mono text-text-muted text-xs uppercase tracking-widest mb-4 text-center">
-          <span className="text-accent-amber">{"//"}</span> FlashAudit Performance Benchmarks
+          <span className="text-accent-amber">{"//"}</span> Engineering
+          Capabilities
         </p>
         <div className="glass-card overflow-hidden">
           <div className="h-[2px] bg-gradient-to-r from-transparent via-accent-amber/30 to-transparent" />
@@ -44,6 +61,9 @@ export default function ImpactMetrics() {
                 </div>
                 <p className="font-mono text-sm text-text-muted uppercase tracking-widest">
                   {metric.label}
+                </p>
+                <p className="font-body text-xs text-text-muted/70 mt-2">
+                  {metric.sublabel}
                 </p>
               </motion.div>
             ))}

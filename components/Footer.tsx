@@ -27,8 +27,9 @@ export default function Footer() {
           viewport={{ once: true }}
           className="text-text-secondary text-lg font-body mb-10 max-w-lg mx-auto"
         >
-          I take on problems that are genuinely hard. If your system needs to
-          be fast, secure, or unbreakable &mdash; that&apos;s where I do my best work.
+          I take on problems that are genuinely hard. If your system needs to be
+          fast, secure, or unbreakable &mdash; that&apos;s where I do my best
+          work.
         </motion.p>
 
         {/* CTA */}
@@ -40,13 +41,13 @@ export default function Footer() {
           className="mb-10"
         >
           <motion.a
-            href="mailto:mahapatro16@gmail.com"
+            href="mailto:rudranarayanmohapatro@gmail.com"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="inline-flex items-center justify-center gap-3 px-10 py-5 glass-card border-accent-amber/30 text-accent-amber font-mono uppercase tracking-wider text-sm hover:border-accent-amber hover:shadow-glow-amber transition-all duration-300"
           >
             <EmailIcon size={18} />
-            mahapatro16@gmail.com
+            rudranarayanmohapatro@gmail.com
           </motion.a>
         </motion.div>
 
@@ -94,7 +95,7 @@ export default function Footer() {
             <ShieldIcon size={20} />
           </motion.a>
           <motion.a
-            href="mailto:mahapatro16@gmail.com"
+            href="mailto:rudranarayanmohapatro@gmail.com"
             whileHover={{ scale: 1.1, y: -2 }}
             whileTap={{ scale: 0.95 }}
             className="p-3 surface-outline rounded-lg text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 transition-all duration-300"

@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | VECTOR 384",
   },
   description:
-    "I build the tools that other engineers depend on. Systems engineer specializing in Rust, C++, and offensive security. FlashAudit scans 847K files/sec. Available for systems architecture, security instrumentation, and full-stack development.",
+    "Systems engineer specializing in Rust, C++, and offensive security. I build production tooling that handles enterprise scale: zero-copy I/O, memory-mapped files, parallel execution. Available for systems architecture, security instrumentation, and full-stack development.",
   keywords: [
     "Rudra Mahapatro",
     "VECTOR384",
@@ -51,7 +51,6 @@ export const metadata: Metadata = {
     "offensive security engineer",
     "algorithmic trading developer",
     "secret scanner",
-    "FlashAudit",
     "hire Rust developer",
     "freelance systems engineer",
     "security scanning CI/CD",
@@ -75,7 +74,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Rudra Mahapatro | Systems Engineer — Rust, C++, Security",
     description:
-      "I build the tools that other engineers depend on. Systems engineer shipping production Rust, C++, and security tooling. FlashAudit scans 847K files/sec — 10x faster than Gitleaks.",
+      "Systems engineer shipping production Rust, C++, and security tooling. Zero-copy architecture, memory-mapped I/O, and parallel execution for systems that don't break under enterprise scale.",
     url: "https://vector384.com",
     siteName: "VECTOR 384",
     locale: "en_US",
@@ -85,7 +84,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Rudra Mahapatro | Systems Engineer — Rust, C++, Security",
     description:
-      "I build the tools that other engineers depend on. Systems engineer shipping production Rust, C++, and security tooling. FlashAudit scans 847K files/sec — 10x faster than Gitleaks.",
+      "Systems engineer shipping production Rust, C++, and security tooling. Zero-copy architecture, memory-mapped I/O, and parallel execution for systems that don't break under enterprise scale.",
     creator: "@RuddyBuilds",
     site: "@RuddyBuilds",
   },
@@ -122,8 +121,8 @@ const jsonLdProfilePage = {
     url: "https://vector384.com",
     jobTitle: "Systems Engineer",
     description:
-      "I build the tools that other engineers depend on. Systems engineer specializing in Rust, C++, and offensive security.",
-    email: "mailto:mahapatro16@gmail.com",
+      "Systems engineer specializing in Rust, C++, and offensive security. I build production tooling that handles enterprise scale.",
+    email: "mailto:rudranarayanmohapatro@gmail.com",
     knowsAbout: [
       "Rust",
       "C++",
@@ -191,17 +190,17 @@ const jsonLdItemList = {
   "@type": "ItemList",
   name: "Projects by Rudra Mahapatro",
   numberOfItems: 11,
+  itemListOrder: "https://schema.org/ItemListOrderAscending",
   itemListElement: [
     {
       "@type": "ListItem",
       position: 1,
       item: {
-        "@type": "SoftwareSourceCode",
-        name: "FlashAudit Core",
+        "@type": "SoftwareApplication",
+        name: "Algo-Bot",
         description:
-          "Enterprise-grade secret scanner in Rust. Scans 847K files in 0.4 seconds — 10x faster than Gitleaks.",
-        programmingLanguage: "Rust",
-        codeRepository: "https://github.com/Ruddxxy/Flash-Audit-Core",
+          "Event-driven algorithmic trading bot for Indian equity markets with automated risk-management kill switches.",
+        operatingSystem: "Cross-platform",
         author: { "@type": "Person", name: "Rudra Mahapatro" },
       },
     },
@@ -210,11 +209,11 @@ const jsonLdItemList = {
       position: 2,
       item: {
         "@type": "SoftwareSourceCode",
-        name: "Proxy Server",
+        name: "BioStream ML",
         description:
-          "Multi-threaded HTTP proxy in pure C with SQL injection detection and IP auto-banning.",
-        programmingLanguage: "C",
-        codeRepository: "https://github.com/Ruddxxy/mul-proxy-c",
+          "Fault-tolerant surgical telemetry pipeline processing 3,000 events/sec with sub-5ms latency and zero data loss.",
+        programmingLanguage: "Python",
+        codeRepository: "https://github.com/Ruddxxy/Biostream-ML",
         author: { "@type": "Person", name: "Rudra Mahapatro" },
       },
     },
@@ -247,29 +246,18 @@ const jsonLdItemList = {
       "@type": "ListItem",
       position: 5,
       item: {
-        "@type": "SoftwareApplication",
-        name: "StegoVault",
+        "@type": "SoftwareSourceCode",
+        name: "FlashAudit Core",
         description:
-          "Steganographic encryption tool hiding AES-256 payloads in images using LSB steganography that survives steganalysis detection.",
-        operatingSystem: "Cross-platform",
+          "Enterprise-grade secret scanner in Rust with zero-copy I/O, memory-mapped files, and parallel execution across all cores.",
+        programmingLanguage: "Rust",
+        codeRepository: "https://github.com/Ruddxxy/Flash-Audit-Core",
         author: { "@type": "Person", name: "Rudra Mahapatro" },
       },
     },
     {
       "@type": "ListItem",
       position: 6,
-      item: {
-        "@type": "SoftwareApplication",
-        name: "NSE Trading Engine",
-        description:
-          "SEBI-compliant algorithmic trading platform for NSE with sub-second execution and automated circuit breakers.",
-        operatingSystem: "Desktop",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 7,
       item: {
         "@type": "SoftwareApplication",
         name: "GlassVault",
@@ -281,13 +269,26 @@ const jsonLdItemList = {
     },
     {
       "@type": "ListItem",
-      position: 8,
+      position: 7,
       item: {
         "@type": "SoftwareApplication",
-        name: "Algo-Bot",
+        name: "NSE Trading Engine",
         description:
-          "Event-driven algorithmic trading bot for Indian equity markets with automated risk-management kill switches.",
-        operatingSystem: "Cross-platform",
+          "SEBI-compliant algorithmic trading platform for NSE with sub-second execution and automated circuit breakers.",
+        operatingSystem: "Desktop",
+        author: { "@type": "Person", name: "Rudra Mahapatro" },
+      },
+    },
+    {
+      "@type": "ListItem",
+      position: 8,
+      item: {
+        "@type": "SoftwareSourceCode",
+        name: "Proxy Server",
+        description:
+          "Multi-threaded HTTP proxy in pure C with SQL injection detection and IP auto-banning.",
+        programmingLanguage: "C",
+        codeRepository: "https://github.com/Ruddxxy/mul-proxy-c",
         author: { "@type": "Person", name: "Rudra Mahapatro" },
       },
     },
@@ -295,12 +296,11 @@ const jsonLdItemList = {
       "@type": "ListItem",
       position: 9,
       item: {
-        "@type": "SoftwareSourceCode",
-        name: "BioStream ML",
+        "@type": "SoftwareApplication",
+        name: "Staleness Scanner",
         description:
-          "Fault-tolerant surgical telemetry pipeline processing 3,000 events/sec with sub-5ms latency and zero data loss.",
-        programmingLanguage: "Python",
-        codeRepository: "https://github.com/Ruddxxy/Biostream-ML",
+          "Dependency freshness monitor with background scanning, per-repo staleness scores, and historical trend tracking.",
+        operatingSystem: "Web",
         author: { "@type": "Person", name: "Rudra Mahapatro" },
       },
     },
@@ -309,10 +309,10 @@ const jsonLdItemList = {
       position: 10,
       item: {
         "@type": "SoftwareApplication",
-        name: "Staleness Scanner",
+        name: "StegoVault",
         description:
-          "Dependency freshness monitor with background scanning, per-repo staleness scores, and historical trend tracking.",
-        operatingSystem: "Web",
+          "Steganographic encryption tool hiding AES-256 payloads in images using LSB steganography that survives steganalysis detection.",
+        operatingSystem: "Cross-platform",
         author: { "@type": "Person", name: "Rudra Mahapatro" },
       },
     },

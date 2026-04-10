@@ -3,12 +3,7 @@
 import { useRef } from "react";
 import { GithubIcon, LinkedInIcon, EmailIcon } from "./icons";
 import Image from "next/image";
-import {
-  motion,
-  useMotionValue,
-  useTransform,
-  useScroll,
-} from "framer-motion";
+import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
 import ChapterLabel from "./ChapterLabel";
 import ScrollIndicator from "./ScrollIndicator";
 
@@ -199,7 +194,7 @@ export default function Hero() {
               </motion.a>
 
               <motion.a
-                href="mailto:mahapatro16@gmail.com"
+                href="mailto:rudranarayanmohapatro@gmail.com"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="inline-flex items-center justify-center gap-3 px-8 py-4 surface-outline text-text-primary font-mono uppercase tracking-wider text-sm hover:border-white/[0.15] transition-all duration-300"
@@ -298,7 +293,7 @@ export default function Hero() {
               <LinkedInIcon size={20} />
             </motion.a>
             <motion.a
-              href="mailto:mahapatro16@gmail.com"
+              href="mailto:rudranarayanmohapatro@gmail.com"
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               className="p-3 surface-outline text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 transition-all duration-300"

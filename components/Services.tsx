@@ -288,11 +288,15 @@ export default function Services() {
             lineHeight={36}
             className="glass-card border-accent-amber/20 px-8 py-6"
           >
-            <span className="text-6xl text-accent-amber/30 font-heading leading-none">&ldquo;</span>
+            <span className="text-6xl text-accent-amber/30 font-heading leading-none">
+              &ldquo;
+            </span>
             <p className="text-xl md:text-2xl italic text-text-secondary font-body leading-relaxed -mt-6">
               {SERVICE_TEXTS["service:philosophy-quote"].text}
             </p>
-            <span className="text-6xl text-accent-amber/30 font-heading leading-none">&rdquo;</span>
+            <span className="text-6xl text-accent-amber/30 font-heading leading-none">
+              &rdquo;
+            </span>
           </PretextBubble>
         </motion.div>
 
@@ -305,7 +309,7 @@ export default function Services() {
           className="mt-16 text-center"
         >
           <motion.a
-            href="mailto:mahapatro16@gmail.com"
+            href="mailto:rudranarayanmohapatro@gmail.com"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="inline-flex items-center justify-center gap-3 px-12 py-5 glass-card border-accent-amber/30 text-accent-amber font-mono uppercase tracking-wider text-sm hover:border-accent-amber hover:shadow-glow-amber transition-all duration-300"
