@@ -99,6 +99,15 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    // Replace these placeholders with real tokens after registering the site:
+    //   https://search.google.com/search-console
+    //   https://www.bing.com/webmasters
+    google: "REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_TOKEN",
+    other: {
+      "msvalidate.01": "REPLACE_WITH_BING_WEBMASTER_TOKEN",
+    },
+  },
 };
 
 const jsonLdWebSite = {
@@ -332,6 +341,37 @@ const jsonLdItemList = {
   ],
 };
 
+const jsonLdBreadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://vector384.com/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Origin",
+      item: "https://vector384.com/#origin",
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "Arsenal",
+      item: "https://vector384.com/#projects",
+    },
+    {
+      "@type": "ListItem",
+      position: 4,
+      name: "Services",
+      item: "https://vector384.com/#services",
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -342,6 +382,16 @@ export default function RootLayout({
       lang="en"
       className={`${syne.variable} ${sora.variable} ${spaceMono.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
+        <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
+      </head>
       <body className="bg-base-950 text-text-primary font-body antialiased overflow-x-hidden">
         <script
           type="application/ld+json"
@@ -359,6 +409,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLdItemList),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLdBreadcrumbs),
           }}
         />
         <SplashProvider>
