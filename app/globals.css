@@ -13,14 +13,14 @@ html {
 }
 
 body {
-  background-color: #0E1018;
-  color: #E2E6EE;
+  background-color: #0e1018;
+  color: #e2e6ee;
   min-height: 100vh;
 }
 
 ::selection {
-  background-color: #E5A537;
-  color: #0E1018;
+  background-color: #e5a537;
+  color: #0e1018;
 }
 
 ::-webkit-scrollbar {
@@ -28,16 +28,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1A2030;
+  background: #1a2030;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #E5A537;
+  background: #e5a537;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #F0C05C;
+  background: #f0c05c;
 }
 
 @layer components {
@@ -65,18 +65,22 @@ body {
   }
 
   .glass-glow-amber {
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
   }
 
   .glass-glow-amber:hover {
     border-color: rgba(229, 165, 55, 0.3);
-    box-shadow: 0 0 20px rgba(229, 165, 55, 0.12), 0 0 40px rgba(229, 165, 55, 0.04);
+    box-shadow:
+      0 0 20px rgba(229, 165, 55, 0.12),
+      0 0 40px rgba(229, 165, 55, 0.04);
   }
 
   .surface-terminal {
-    background: #0E1018;
+    background: #0e1018;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    border-left: 3px solid #E5A537;
+    border-left: 3px solid #e5a537;
     border-radius: 0.75rem;
   }
 
@@ -104,10 +108,127 @@ body {
     border: 1px solid rgba(229, 165, 55, 0.15);
     border-radius: 0.75rem;
   }
+
+  /* CTA button utilities — Phase 3 polish */
+  .btn-amber {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: rgba(229, 165, 55, 0.06);
+    border: 1px solid rgba(229, 165, 55, 0.3);
+    color: #e5a537;
+    transition:
+      border-color 0.3s ease,
+      color 0.3s ease,
+      box-shadow 0.4s ease,
+      background 0.3s ease;
+  }
+
+  .btn-amber::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(229, 165, 55, 0.18) 50%,
+      transparent 100%
+    );
+    transform: translateX(-110%);
+    transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    z-index: -1;
+  }
+
+  .btn-amber:hover {
+    border-color: rgba(229, 165, 55, 0.7);
+    color: #f0c05c;
+    background: rgba(229, 165, 55, 0.1);
+    box-shadow:
+      0 0 24px rgba(229, 165, 55, 0.18),
+      0 0 48px rgba(229, 165, 55, 0.06),
+      inset 0 0 0 1px rgba(229, 165, 55, 0.4);
+  }
+
+  .btn-amber:hover::before {
+    transform: translateX(110%);
+  }
+
+  .btn-outline {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e6ee;
+    transition:
+      border-color 0.3s ease,
+      color 0.3s ease,
+      box-shadow 0.4s ease;
+  }
+
+  .btn-outline::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    transform: translateX(-110%);
+    transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    z-index: -1;
+  }
+
+  .btn-outline:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    box-shadow:
+      0 0 24px rgba(255, 255, 255, 0.06),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  }
+
+  .btn-outline:hover::before {
+    transform: translateX(110%);
+  }
+
+  /* Social icon hover — radial amber glow under the icon */
+  .social-icon-glow {
+    position: relative;
+    isolation: isolate;
+    transition:
+      color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .social-icon-glow::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(229, 165, 55, 0.2) 0%,
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .social-icon-glow:hover {
+    color: #e5a537;
+  }
+
+  .social-icon-glow:hover::after {
+    opacity: 1;
+  }
 }
 
 .text-gradient-amber {
-  background: linear-gradient(135deg, #E5A537, #F0C05C);
+  background: linear-gradient(135deg, #e5a537, #f0c05c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -124,8 +245,13 @@ body {
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .animate-blink {

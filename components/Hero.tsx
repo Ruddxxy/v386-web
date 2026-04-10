@@ -186,18 +186,16 @@ export default function Hero() {
             >
               <motion.a
                 href="#projects"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center justify-center gap-3 px-8 py-4 glass-card border-accent-amber/30 text-accent-amber font-mono uppercase tracking-wider text-sm hover:border-accent-amber hover:shadow-glow-amber transition-all duration-300"
+                whileTap={{ scale: 0.97 }}
+                className="btn-amber inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-mono uppercase tracking-wider text-sm"
               >
                 View The Arsenal
               </motion.a>
 
               <motion.a
                 href="mailto:rudranarayanmohapatro@gmail.com"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center justify-center gap-3 px-8 py-4 surface-outline text-text-primary font-mono uppercase tracking-wider text-sm hover:border-white/[0.15] transition-all duration-300"
+                whileTap={{ scale: 0.97 }}
+                className="btn-outline inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-mono uppercase tracking-wider text-sm"
               >
                 <EmailIcon size={18} />
                 Work With Me
@@ -274,9 +272,10 @@ export default function Hero() {
               href="https://github.com/Ruddxxy"
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-3 surface-outline text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 transition-all duration-300"
+              whileHover={{ y: -3, rotate: -4 }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 380, damping: 22 }}
+              className="social-icon-glow p-3 surface-outline text-text-secondary"
               aria-label="GitHub"
             >
               <GithubIcon size={20} />
@@ -285,18 +284,20 @@ export default function Hero() {
               href="https://linkedin.com/in/rudra2"
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-3 surface-outline text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 transition-all duration-300"
+              whileHover={{ y: -3, rotate: -4 }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 380, damping: 22 }}
+              className="social-icon-glow p-3 surface-outline text-text-secondary"
               aria-label="LinkedIn"
             >
               <LinkedInIcon size={20} />
             </motion.a>
             <motion.a
               href="mailto:rudranarayanmohapatro@gmail.com"
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-3 surface-outline text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 transition-all duration-300"
+              whileHover={{ y: -3, rotate: -4 }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 380, damping: 22 }}
+              className="social-icon-glow p-3 surface-outline text-text-secondary"
               aria-label="Email"
             >
               <EmailIcon size={20} />

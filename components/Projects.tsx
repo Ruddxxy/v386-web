@@ -395,19 +395,30 @@ export default function Projects() {
   return (
     <section id="projects" className="py-16 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="mb-12"
-        >
-          <ChapterLabel number="03" title="the arsenal" />
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight text-text-primary">
+        {/* Section Header — split entry: label drops in from top, heading rises from bottom */}
+        <div className="mb-12 overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            <ChapterLabel number="03" title="the arsenal" />
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.7,
+              delay: 0.15,
+              ease: [0.22, 0.61, 0.36, 1],
+            }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight text-text-primary"
+          >
             The Arsenal<span className="text-accent-amber">.</span>
-          </h2>
-        </motion.div>
+          </motion.h2>
+        </div>
 
         {/* Mid-section CTA */}
         <motion.div

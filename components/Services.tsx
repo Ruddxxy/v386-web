@@ -243,11 +243,11 @@ export default function Services() {
   return (
     <section id="services" className="py-16 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
+        {/* Section Header — scale-in entrance */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, scale: 0.94 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
           viewport={{ once: true, margin: "-100px" }}
           className="mb-12"
         >
@@ -310,9 +310,8 @@ export default function Services() {
         >
           <motion.a
             href="mailto:rudranarayanmohapatro@gmail.com"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center justify-center gap-3 px-12 py-5 glass-card border-accent-amber/30 text-accent-amber font-mono uppercase tracking-wider text-sm hover:border-accent-amber hover:shadow-glow-amber transition-all duration-300"
+            whileTap={{ scale: 0.97 }}
+            className="btn-amber inline-flex items-center justify-center gap-3 px-12 py-5 rounded-xl font-mono uppercase tracking-wider text-sm"
           >
             Got a problem worth solving? Let&apos;s talk.
           </motion.a>

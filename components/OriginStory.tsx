@@ -27,7 +27,10 @@ function NarrativeBlock({
   const y = useTransform(scrollYProgress, [rangeStart, rangeEnd], [40, 0]);
 
   return (
-    <motion.div style={{ opacity, y }} className={`border-l ${borderColor} pl-8 py-12`}>
+    <motion.div
+      style={{ opacity, y }}
+      className={`border-l ${borderColor} pl-8 py-12`}
+    >
       {children}
     </motion.div>
   );
@@ -62,9 +65,9 @@ export default function OriginStory() {
 
         {/* Opening pull quote */}
         <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 0.61, 0.36, 1] }}
           viewport={{ once: true, margin: "-100px" }}
           className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold leading-tight tracking-tight text-text-primary mb-8"
         >
@@ -142,10 +145,10 @@ export default function OriginStory() {
             </h3>
             <p className="text-lg md:text-xl leading-relaxed text-text-secondary font-body">
               Production goes down. Everyone scrambles. Root cause? A hardcoded
-              secret. A service that buckles at 2x load. I kept seeing it &mdash;
-              teams shipping tools that passed demos but crumbled under real
-              traffic. I decided I&apos;d rather build the tools that survive the
-              3 AM incident than the ones that cause it.
+              secret. A service that buckles at 2x load. I kept seeing it
+              &mdash; teams shipping tools that passed demos but crumbled under
+              real traffic. I decided I&apos;d rather build the tools that
+              survive the 3 AM incident than the ones that cause it.
             </p>
           </NarrativeBlock>
 
@@ -186,10 +189,10 @@ export default function OriginStory() {
             <p className="text-lg md:text-xl leading-relaxed text-text-secondary font-body">
               FlashAudit scans 847K files in under a second &mdash; Gitleaks
               takes minutes. My trading engine handles SEBI-compliant execution
-              with a kill switch that works. My steganography tool hides encrypted
-              payloads in images so well that steganalysis tools can&apos;t find
-              them. I don&apos;t build proof-of-concepts. I build things that work
-              under pressure, and I can prove it.
+              with a kill switch that works. My steganography tool hides
+              encrypted payloads in images so well that steganalysis tools
+              can&apos;t find them. I don&apos;t build proof-of-concepts. I
+              build things that work under pressure, and I can prove it.
             </p>
           </NarrativeBlock>
         </div>
