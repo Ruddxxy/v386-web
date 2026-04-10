@@ -4,6 +4,42 @@ import { motion } from "framer-motion";
 import { GithubIcon, EmailIcon } from "./icons";
 import ChapterLabel from "./ChapterLabel";
 import MasonryGrid from "./MasonryGrid";
+import ParallaxShapes from "./ParallaxShapes";
+
+const PROJECTS_PARALLAX_SHAPES = [
+  // Top-right cyan square
+  {
+    type: "square" as const,
+    className:
+      "top-[8%] right-[6%] w-4 h-4 border border-accent-cyan/25 rotate-12",
+    speed: -0.5,
+  },
+  // Mid-left amber dot
+  {
+    type: "dot" as const,
+    className: "top-[35%] left-[4%] w-2 h-2 bg-accent-amber/30 rounded-full",
+    speed: 0.4,
+  },
+  // Right side amber ring
+  {
+    type: "circle" as const,
+    className:
+      "top-[55%] right-[3%] w-8 h-8 border border-accent-amber/20 rounded-full",
+    speed: -0.7,
+  },
+  // Bottom-left cyan diagonal line
+  {
+    type: "line" as const,
+    className: "bottom-[20%] left-[8%] w-16 h-px bg-accent-cyan/20 rotate-45",
+    speed: 0.3,
+  },
+  // Bottom-right tiny square
+  {
+    type: "square" as const,
+    className: "bottom-[10%] right-[15%] w-2 h-2 border border-accent-amber/30",
+    speed: -0.4,
+  },
+];
 
 type ProjectCategory = "systems-security" | "fintech" | "fullstack";
 type SurfaceType = "terminal" | "glass-cyan" | "glass-amber" | "outline";
@@ -393,8 +429,9 @@ const fullstackProjects: Project[] = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-16 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section id="projects" className="py-16 px-6 relative">
+      <ParallaxShapes shapes={PROJECTS_PARALLAX_SHAPES} />
+      <div className="max-w-7xl mx-auto relative">
         {/* Section Header — split entry: label drops in from top, heading rises from bottom */}
         <div className="mb-12 overflow-hidden">
           <motion.div

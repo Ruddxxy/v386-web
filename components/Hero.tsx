@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
 import ChapterLabel from "./ChapterLabel";
 import ScrollIndicator from "./ScrollIndicator";
+import ParallaxShapes from "./ParallaxShapes";
 
 function TerminalLine({ command, delay }: { command: string; delay: number }) {
   return (
@@ -69,6 +70,7 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} className="min-h-screen relative">
+      <ParallaxShapes />
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
         className="relative min-h-screen flex"

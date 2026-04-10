@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useTransform, useReducedMotion, MotionValue } from "framer-motion";
+import {
+  motion,
+  useTransform,
+  useReducedMotion,
+  MotionValue,
+} from "framer-motion";
 
 interface Props {
   scrollYProgress: MotionValue<number>;
@@ -61,7 +66,26 @@ function OriginCell({
   const cellOpacity = useTransform(
     scrollYProgress,
     [Math.max(0, cell.activateAt - 0.05), cell.activateAt + 0.1],
-    [0, 0.12]
+    [0, 0.12],
+  );
+  const cellRotation = useTransform(
+    scrollYProgress,
+    [Math.max(0, cell.activateAt - 0.05), cell.activateAt + 0.15],
+    [90, 0],
+  );
+  const ringScale = useTransform(
+    scrollYProgress,
+    [Math.max(0, cell.activateAt - 0.02), cell.activateAt + 0.18],
+    [0.4, 1.6],
+  );
+  const ringOpacity = useTransform(
+    scrollYProgress,
+    [
+      Math.max(0, cell.activateAt - 0.02),
+      cell.activateAt + 0.05,
+      cell.activateAt + 0.18,
+    ],
+    [0, 0.35, 0],
   );
 
   if (reducedMotion) {
@@ -78,24 +102,58 @@ function OriginCell({
     );
   }
 
+  // Center for rotation transform-origin
+  const cx = cell.size / 2;
+  const cy = cell.size / 2;
+
   return (
-    <motion.rect
-      x={`${cell.x}%`}
-      y={cell.y}
-      width={cell.size}
-      height={cell.size}
-      rx={2}
-      fill="#E5A537"
-      filter="url(#cell-glow)"
-      style={{ opacity: cellOpacity }}
-      animate={{ opacity: [0, 0.15, 0] }}
-      transition={{
-        duration: 4 + index * 0.3,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: index * 0.2,
+    <motion.g
+      style={{
+        // Convert percentage x to nothing — keep as group with translate
+        transformOrigin: `${cx}px ${cy}px`,
       }}
-    />
+    >
+      {/* Concentric ripple ring — appears on activation */}
+      <motion.rect
+        x={`${cell.x}%`}
+        y={cell.y}
+        width={cell.size}
+        height={cell.size}
+        rx={2}
+        fill="none"
+        stroke="#E5A537"
+        strokeWidth={1}
+        style={{
+          opacity: ringOpacity,
+          scale: ringScale,
+          transformOrigin: "center",
+          transformBox: "fill-box",
+        }}
+      />
+      {/* Main cell — rotates 90deg -> 0deg on activation */}
+      <motion.rect
+        x={`${cell.x}%`}
+        y={cell.y}
+        width={cell.size}
+        height={cell.size}
+        rx={2}
+        fill="#E5A537"
+        filter="url(#cell-glow)"
+        style={{
+          opacity: cellOpacity,
+          rotate: cellRotation,
+          transformOrigin: "center",
+          transformBox: "fill-box",
+        }}
+        animate={{ opacity: [0, 0.15, 0] }}
+        transition={{
+          duration: 4 + index * 0.3,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: index * 0.2,
+        }}
+      />
+    </motion.g>
   );
 }
 
@@ -111,7 +169,17 @@ function TraceLine({
   const lineOpacity = useTransform(
     scrollYProgress,
     [Math.max(0, line.activateAt - 0.05), line.activateAt + 0.1],
-    [0, 0.08]
+    [0, 0.08],
+  );
+  // Color shifts amber -> cyan as the line activates
+  const lineColor = useTransform(
+    scrollYProgress,
+    [
+      Math.max(0, line.activateAt - 0.05),
+      line.activateAt + 0.05,
+      line.activateAt + 0.2,
+    ],
+    ["#E5A537", "#E5A537", "#3FBDD4"],
   );
 
   if (reducedMotion) {
@@ -135,10 +203,9 @@ function TraceLine({
       y1={line.y}
       x2="100%"
       y2={line.y}
-      stroke="#E5A537"
       strokeWidth={1}
       strokeDasharray="8 16"
-      style={{ opacity: lineOpacity }}
+      style={{ opacity: lineOpacity, stroke: lineColor }}
       animate={{ strokeDashoffset: [0, -24] }}
       transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
     />
