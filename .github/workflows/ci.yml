@@ -6,22 +6,48 @@ on:
   pull_request:
     branches: [main]
 
+# Cancel superseded runs on the same ref so only the latest commit's CI
+# consumes minutes. Lets rapid pushes skip stale verification.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Minimal permissions — this workflow only reads the repo. Override at the
+# job level if a future step needs write (e.g. deploy, release).
+permissions:
+  contents: read
+
 jobs:
-  build:
+  verify:
+    name: Typecheck · Build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '20'
-          cache: 'npm'
+          bun-version: "1.1"
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        run: bunx tsc --noEmit
+
+      # TODO: re-enable once ESLint + `lint` script are added.
+      # - name: Lint
+      #   run: bun run lint
+
+      # TODO: re-enable once Vitest + `test` script are added (frontend.md
+      # standard: Vitest + Testing Library, 85% coverage target).
+      # - name: Test
+      #   run: bun run test
 
       - name: Build project
-        run: npm run build
+        run: bun run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
