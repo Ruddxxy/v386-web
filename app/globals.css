@@ -10,6 +10,9 @@
 
 html {
   /* Smooth scrolling handled by Lenis */
+  /* Non-static position so framer-motion's useScroll can measure target offsets
+     against the document element (the default scroll container). */
+  position: relative;
 }
 
 body {

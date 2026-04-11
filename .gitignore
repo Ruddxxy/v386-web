@@ -34,4 +34,14 @@ yarn-error.log*
 next-env.d.ts
 
 
-.public	
+.public
+
+# code-review-graph — local-only memory tooling, not project context
+.code-review-graph/
+.mcp.json
+.claude/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.cursorrules
+.windsurfrules

@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GithubIcon, LinkedInIcon, EmailIcon, ShieldIcon } from "./icons";
+import {
+  GithubIcon,
+  LinkedInIcon,
+  EmailIcon,
+  ShieldIcon,
+  XIcon,
+  SubstackIcon,
+} from "./icons";
 
 export default function Footer() {
   return (
@@ -86,6 +93,30 @@ export default function Footer() {
             aria-label="LinkedIn"
           >
             <LinkedInIcon size={20} />
+          </motion.a>
+          <motion.a
+            href="https://x.com/Ruddybuilds"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ y: -3, rotate: -4 }}
+            whileTap={{ scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 380, damping: 22 }}
+            className="social-icon-glow p-3 surface-outline rounded-lg text-text-secondary"
+            aria-label="X"
+          >
+            <XIcon size={18} />
+          </motion.a>
+          <motion.a
+            href="https://ruddybuilds.substack.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ y: -3, rotate: -4 }}
+            whileTap={{ scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 380, damping: 22 }}
+            className="social-icon-glow p-3 surface-outline rounded-lg text-text-secondary"
+            aria-label="Substack"
+          >
+            <SubstackIcon size={20} />
           </motion.a>
           <motion.a
             href="https://tryhackme.com/p/Ruddyignite23"

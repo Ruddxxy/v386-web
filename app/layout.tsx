@@ -392,7 +392,13 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
         <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
       </head>
-      <body className="bg-base-950 text-text-primary font-body antialiased overflow-x-hidden">
+      {/* suppressHydrationWarning: Grammarly and similar browser extensions inject
+          data-new-gr-c-s-check-loaded / data-gr-ext-installed onto <body> before
+          React hydrates. Scoped to <body> only — does NOT silence child mismatches. */}
+      <body
+        className="bg-base-950 text-text-primary font-body antialiased overflow-x-hidden"
+        suppressHydrationWarning
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

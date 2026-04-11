@@ -24,9 +24,19 @@ const nextConfig = {
               "camera=(), microphone=(), geolocation=(), interest-cohort=()",
           },
           {
+            // Vercel Live/Toolbar (preview deployments) needs frame-src +
+            // script/style/connect/img allowances for vercel.live and its
+            // Pusher websocket. Keeping this here so the widget works in
+            // previews without CSP warnings in the console.
             key: "Content-Security-Policy-Report-Only",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com;",
+              "default-src 'self'; " +
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vercel.live; " +
+              "style-src 'self' 'unsafe-inline' https://vercel.live; " +
+              "font-src 'self' https://vercel.live https://assets.vercel.com; " +
+              "img-src 'self' data: blob: https://vercel.live https://vercel.com; " +
+              "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://vercel.live wss://ws-us3.pusher.com; " +
+              "frame-src 'self' https://vercel.live;",
           },
         ],
       },

@@ -6,6 +6,7 @@ import ChapterLabel from "./ChapterLabel";
 import PretextBubble from "./pretext/PretextBubble";
 import { SERVICE_TEXTS } from "@/lib/pretext-registry";
 import { usePretextLayout } from "./pretext/usePretextLayout";
+import { SubstackIcon, XIcon } from "./icons";
 
 type SurfaceType = "terminal" | "glass-cyan" | "solid";
 
@@ -315,6 +316,46 @@ export default function Services() {
           >
             Got a problem worth solving? Let&apos;s talk.
           </motion.a>
+
+          {/* Secondary follow links */}
+          <div className="mt-8 flex items-center justify-center gap-6 font-mono text-sm">
+            <motion.a
+              href="https://ruddybuilds.substack.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 380, damping: 22 }}
+              className="inline-flex items-center gap-2 text-text-secondary hover:text-accent-amber transition-colors"
+              aria-label="Read on Substack"
+            >
+              <SubstackIcon size={16} />
+              <span>Substack</span>
+              <span aria-hidden="true" className="text-accent-amber/70">
+                &#8599;
+              </span>
+            </motion.a>
+            <span aria-hidden="true" className="text-text-muted">
+              &middot;
+            </span>
+            <motion.a
+              href="https://x.com/Ruddybuilds"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 380, damping: 22 }}
+              className="inline-flex items-center gap-2 text-text-secondary hover:text-accent-amber transition-colors"
+              aria-label="Follow on X"
+            >
+              <XIcon size={14} />
+              <span>Follow on X</span>
+              <span aria-hidden="true" className="text-accent-amber/70">
+                &#8599;
+              </span>
+            </motion.a>
+          </div>
+
           <p className="mt-6 font-mono text-text-muted text-sm">
             {"// no shortcuts, no compromises"}
           </p>
