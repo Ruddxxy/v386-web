@@ -6,7 +6,6 @@ import Hero from "@/components/Hero";
 import BackgroundLayer from "@/components/BackgroundLayer";
 import CursorGlow from "@/components/CursorGlow";
 import ChapterTransition from "@/components/ChapterTransition";
-import { useSplash } from "@/components/SplashProvider";
 
 // Below-the-fold sections — defer their JS until needed.
 // ssr: true keeps SEO content in the initial HTML for crawlers.
@@ -17,10 +16,6 @@ const Services = dynamic(() => import("@/components/Services"));
 const Footer = dynamic(() => import("@/components/Footer"));
 
 export default function Home() {
-  const { splashComplete } = useSplash();
-
-  if (!splashComplete) return null;
-
   return (
     <main className="relative">
       <BackgroundLayer />
