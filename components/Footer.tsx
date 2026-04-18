@@ -45,7 +45,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
           viewport={{ once: true }}
-          className="mb-10"
+          className="mb-6"
         >
           <motion.a
             href="mailto:rudranarayanmohapatro@gmail.com"
@@ -57,14 +57,19 @@ export default function Footer() {
           </motion.a>
         </motion.div>
 
-        {/* Availability */}
-        <div className="flex items-center justify-center gap-2 mb-10">
-          <span className="relative flex w-3 h-3">
-            <span className="absolute inset-0 rounded-full bg-color-success/60 animate-ping" />
-            <span className="relative inline-flex w-3 h-3 rounded-full bg-color-success animate-glow-pulse" />
-          </span>
-          <span className="text-text-secondary text-sm uppercase tracking-wider font-mono">
-            Taking on new projects
+        {/* Availability + location */}
+        <div className="flex flex-col items-center gap-2 mb-10">
+          <div className="flex items-center justify-center gap-2">
+            <span className="relative flex w-3 h-3">
+              <span className="absolute inset-0 rounded-full bg-color-success/60 animate-ping" />
+              <span className="relative inline-flex w-3 h-3 rounded-full bg-color-success animate-glow-pulse" />
+            </span>
+            <span className="text-text-secondary text-sm uppercase tracking-wider font-mono">
+              Taking on new projects
+            </span>
+          </div>
+          <span className="text-text-muted text-xs uppercase tracking-widest font-mono">
+            Based in India · working globally
           </span>
         </div>
 

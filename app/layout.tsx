@@ -5,6 +5,7 @@ import { SplashProvider } from "@/components/SplashProvider";
 import SplashScreen from "@/components/SplashScreen";
 import SmoothScroller from "@/components/SmoothScroller";
 import { PretextProvider } from "@/components/pretext/PretextProvider";
+import { PROJECTS } from "@/lib/projects";
 import "./globals.css";
 
 const syne = Syne({
@@ -40,31 +41,15 @@ export const metadata: Metadata = {
   },
   description:
     "Systems engineer specializing in Rust, C++, and offensive security. I build production tooling that handles enterprise scale: zero-copy I/O, memory-mapped files, parallel execution. Available for systems architecture, security instrumentation, and full-stack development.",
+  // Google ignores `keywords`; Bing still weighs a short list.
+  // Keep to the terms worth ranking for — not a dump of every surface word.
   keywords: [
     "Rudra Mahapatro",
-    "VECTOR384",
-    "Vector 384",
+    "VECTOR 384",
     "systems engineer",
     "Rust developer",
     "C++ developer",
-    "Python developer",
     "offensive security engineer",
-    "algorithmic trading developer",
-    "secret scanner",
-    "hire Rust developer",
-    "freelance systems engineer",
-    "security scanning CI/CD",
-    "zero-copy architecture",
-    "high-frequency trading infrastructure",
-    "steganography tool",
-    "SEBI compliant trading",
-    "systems architecture consulting",
-    "MVP development",
-    "Rust security tools",
-    "enterprise secret scanning",
-    "memory-mapped I/O",
-    "penetration testing",
-    "WebRTC file transfer",
   ],
   authors: [{ name: "Rudra Mahapatro", url: "https://vector384.com" }],
   creator: "Rudra Mahapatro",
@@ -194,182 +179,32 @@ const jsonLdProfilePage = {
   },
 };
 
+// Derived from the canonical catalog in lib/projects.ts so the schema
+// and the rendered grid can never disagree.
 const jsonLdItemList = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "Projects by Rudra Mahapatro",
-  numberOfItems: 11,
+  numberOfItems: PROJECTS.length,
   itemListOrder: "https://schema.org/ItemListOrderAscending",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      item: {
-        "@type": "SoftwareApplication",
-        name: "Algo-Bot",
-        description:
-          "Event-driven algorithmic trading bot for Indian equity markets with automated risk-management kill switches.",
-        operatingSystem: "Cross-platform",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
+  itemListElement: PROJECTS.map((project, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    item: {
+      "@type": project.schemaType,
+      name: project.title,
+      description: project.description,
+      url: `https://vector384.com/projects/${project.slug}`,
+      author: { "@type": "Person", name: "Rudra Mahapatro" },
+      ...(project.programmingLanguage && {
+        programmingLanguage: project.programmingLanguage,
+      }),
+      ...(project.operatingSystem && {
+        operatingSystem: project.operatingSystem,
+      }),
+      ...(project.github && { codeRepository: project.github }),
     },
-    {
-      "@type": "ListItem",
-      position: 2,
-      item: {
-        "@type": "SoftwareSourceCode",
-        name: "BioStream ML",
-        description:
-          "Fault-tolerant surgical telemetry pipeline processing 3,000 events/sec with sub-5ms latency and zero data loss.",
-        programmingLanguage: "Python",
-        codeRepository: "https://github.com/Ruddxxy/Biostream-ML",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      item: {
-        "@type": "SoftwareSourceCode",
-        name: "CredGuard",
-        description:
-          "Monetized identity security platform monitoring credential leaks across the dark web with Stripe billing and risk scoring.",
-        programmingLanguage: "Python",
-        codeRepository: "https://github.com/Ruddxxy/CredGuard",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 4,
-      item: {
-        "@type": "SoftwareApplication",
-        name: "DataCenter Manager",
-        description:
-          "Multi-threaded data center simulation with Pthreads, mutex-locked resource pools, and condition variable signaling.",
-        operatingSystem: "Linux",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 5,
-      item: {
-        "@type": "SoftwareSourceCode",
-        name: "FlashAudit Core",
-        description:
-          "Enterprise-grade secret scanner in Rust with zero-copy I/O, memory-mapped files, and parallel execution across all cores.",
-        programmingLanguage: "Rust",
-        codeRepository: "https://github.com/Ruddxxy/Flash-Audit-Core",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 6,
-      item: {
-        "@type": "SoftwareApplication",
-        name: "GlassVault",
-        description:
-          "Encrypted personal finance tracker with SQLCipher AES-256 encryption and CRDT-based offline-first sync.",
-        operatingSystem: "iOS, Android",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 7,
-      item: {
-        "@type": "SoftwareApplication",
-        name: "NSE Trading Engine",
-        description:
-          "SEBI-compliant algorithmic trading platform for NSE with sub-second execution and automated circuit breakers.",
-        operatingSystem: "Desktop",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 8,
-      item: {
-        "@type": "SoftwareSourceCode",
-        name: "Proxy Server",
-        description:
-          "Multi-threaded HTTP proxy in pure C with SQL injection detection and IP auto-banning.",
-        programmingLanguage: "C",
-        codeRepository: "https://github.com/Ruddxxy/mul-proxy-c",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 9,
-      item: {
-        "@type": "SoftwareApplication",
-        name: "Staleness Scanner",
-        description:
-          "Dependency freshness monitor with background scanning, per-repo staleness scores, and historical trend tracking.",
-        operatingSystem: "Web",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 10,
-      item: {
-        "@type": "SoftwareApplication",
-        name: "StegoVault",
-        description:
-          "Steganographic encryption tool hiding AES-256 payloads in images using LSB steganography that survives steganalysis detection.",
-        operatingSystem: "Cross-platform",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 11,
-      item: {
-        "@type": "SoftwareSourceCode",
-        name: "Warp P2P",
-        description:
-          "Direct browser-to-browser file transfer using WebRTC data channels — no server storage, no file size limits.",
-        programmingLanguage: "TypeScript",
-        codeRepository: "https://github.com/Ruddxxy/warp-p2p",
-        author: { "@type": "Person", name: "Rudra Mahapatro" },
-      },
-    },
-  ],
-};
-
-const jsonLdBreadcrumbs = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: "https://vector384.com/",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Origin",
-      item: "https://vector384.com/#origin",
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      name: "Arsenal",
-      item: "https://vector384.com/#projects",
-    },
-    {
-      "@type": "ListItem",
-      position: 4,
-      name: "Services",
-      item: "https://vector384.com/#services",
-    },
-  ],
+  })),
 };
 
 export default function RootLayout({
@@ -415,12 +250,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLdItemList),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLdBreadcrumbs),
           }}
         />
         <SplashProvider>

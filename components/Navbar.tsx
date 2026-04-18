@@ -113,6 +113,7 @@ export default function Navbar() {
               <NavLink href="#services" active={activeSection === "services"}>
                 Services
               </NavLink>
+              <NavLink href="/writing">Writing</NavLink>
             </div>
 
             <button
@@ -151,16 +152,17 @@ export default function Navbar() {
               >
                 <div className="glass-card-elevated mx-4 mb-4 flex flex-col p-4 gap-1">
                   {[
-                    { id: "origin", label: "Origin" },
-                    { id: "projects", label: "Arsenal" },
-                    { id: "services", label: "Services" },
+                    { id: "origin", label: "Origin", href: "#origin" },
+                    { id: "projects", label: "Arsenal", href: "#projects" },
+                    { id: "services", label: "Services", href: "#services" },
+                    { id: "writing", label: "Writing", href: "/writing" },
                   ].map((section, i) => (
                     <motion.a
                       key={section.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: i * 0.05 }}
-                      href={`#${section.id}`}
+                      href={section.href}
                       onClick={() => setMobileMenuOpen(false)}
                       className={`px-4 py-3 font-mono text-sm uppercase tracking-wider rounded-lg transition-all duration-150 ${
                         section.id === activeSection

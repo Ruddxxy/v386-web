@@ -96,7 +96,7 @@ export default function Hero() {
               width={550}
               height={550}
               priority
-              className="w-full h-full object-cover grayscale opacity-40 mix-blend-luminosity"
+              className="w-full h-full object-cover grayscale opacity-60"
             />
           </div>
         </div>
@@ -192,20 +192,20 @@ export default function Hero() {
               className="flex flex-col sm:flex-row gap-4"
             >
               <motion.a
-                href="#projects"
+                href="mailto:rudranarayanmohapatro@gmail.com"
                 whileTap={{ scale: 0.97 }}
                 className="btn-amber inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-mono uppercase tracking-wider text-sm"
               >
-                View The Arsenal
+                <EmailIcon size={18} />
+                Start a project
               </motion.a>
 
               <motion.a
-                href="mailto:rudranarayanmohapatro@gmail.com"
+                href="#projects"
                 whileTap={{ scale: 0.97 }}
                 className="btn-outline inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-mono uppercase tracking-wider text-sm"
               >
-                <EmailIcon size={18} />
-                Work With Me
+                See Projects
               </motion.a>
             </motion.div>
           </div>
@@ -313,18 +313,44 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Mobile Terminal Bar */}
+      {/* Mobile Terminal Panel */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.8 }}
         className="lg:hidden surface-terminal rounded-none border-x-0"
       >
-        <div className="px-6 py-4 font-mono text-sm flex items-center gap-2 overflow-x-auto">
-          <span className="text-accent-amber flex-shrink-0">$</span>
-          <span className="text-text-secondary whitespace-nowrap">
-            flashaudit scan completed — 23 secrets found in 0.4s
+        <div className="flex items-center gap-3 px-4 py-2 border-b border-white/[0.06]">
+          <div className="flex gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+          </div>
+          <span className="font-mono text-[10px] text-text-muted ml-1">
+            vector384@arch ~
           </span>
+        </div>
+        <div className="px-4 py-3 space-y-1.5 font-mono text-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-accent-amber">$</span>
+            <span className="text-text-primary truncate">
+              flashaudit scan --repo enterprise-monorepo
+            </span>
+          </div>
+          <div className="text-text-secondary pl-4 truncate">
+            847,000 files · 23 secrets · 0.4s
+          </div>
+          <div className="flex items-center gap-2 pt-1">
+            <span className="text-accent-amber">$</span>
+            <span className="text-text-primary">uptime</span>
+          </div>
+          <div className="text-text-secondary pl-4 truncate">
+            3+ years · 160+ commits · shipping since day one
+          </div>
+          <div className="flex items-center gap-2 pt-1">
+            <span className="text-accent-amber">$</span>
+            <span className="w-2 h-3.5 bg-accent-amber animate-blink inline-block" />
+          </div>
         </div>
       </motion.div>
 

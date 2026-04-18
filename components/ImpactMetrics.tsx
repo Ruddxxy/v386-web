@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import AnimatedCounter from "./AnimatedCounter";
 
 interface Metric {
@@ -8,6 +9,7 @@ interface Metric {
   suffix: string;
   label: string;
   sublabel: string;
+  source: string;
 }
 
 const METRICS: Metric[] = [
@@ -15,19 +17,22 @@ const METRICS: Metric[] = [
     value: 847,
     suffix: "K+",
     label: "peak throughput",
-    sublabel: "files/sec at production scale",
+    sublabel: "files scanned in 0.4s",
+    source: "FlashAudit Core · enterprise monorepo",
   },
   {
     value: 10,
     suffix: "x",
-    label: "average speedup delivered",
+    label: "speedup delivered",
     sublabel: "vs. baseline tooling",
+    source: "FlashAudit Core vs. Gitleaks 8.18",
   },
   {
     value: 5,
     suffix: "ms",
-    label: "minimum latency achieved",
+    label: "minimum latency",
     sublabel: "p50 across hot paths",
+    source: "BioStream ML · 3K events/sec pipeline",
   },
 ];
 
@@ -65,9 +70,20 @@ export default function ImpactMetrics() {
                 <p className="font-body text-xs text-text-muted/70 mt-2">
                   {metric.sublabel}
                 </p>
+                <p className="font-mono text-[10px] text-accent-amber/70 uppercase tracking-widest mt-3">
+                  {metric.source}
+                </p>
               </motion.div>
             ))}
           </div>
+        </div>
+        <div className="mt-6 text-center">
+          <Link
+            href="/benchmarks"
+            className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-text-muted hover:text-accent-amber transition-colors"
+          >
+            See the methodology →
+          </Link>
         </div>
       </div>
     </section>
