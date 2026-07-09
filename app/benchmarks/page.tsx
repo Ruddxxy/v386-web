@@ -43,24 +43,20 @@ const FLASHAUDIT_VS_GITLEAKS: Row[] = [
 export default function BenchmarksPage() {
   return (
     <main className="min-h-screen bg-base-950 text-text-primary">
-      <div className="max-w-3xl mx-auto px-6 py-20 md:py-28">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-text-muted hover:text-accent-amber transition-colors mb-12"
-        >
-          ← Home
+      <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
+        <Link href="/" className="link-mono mb-12 inline-block">
+          ← home
         </Link>
 
         <header className="mb-16">
-          <p className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-            // benchmarks
+          <p className="mb-4 font-mono text-caption uppercase text-accent-amber">
+            benchmarks
           </p>
-          <h1 className="text-4xl md:text-6xl font-heading font-bold leading-[1.05] tracking-tight mb-6">
-            Reproducible
-            <br />
-            <span className="text-gradient-amber">measurements</span>.
+          <h1 className="font-heading text-title-1 leading-[1.05] text-text-primary">
+            Reproducible measurements
+            <span className="text-accent-amber">.</span>
           </h1>
-          <p className="text-lg text-text-secondary font-body leading-relaxed">
+          <p className="mt-5 max-w-[60ch] font-body text-lede leading-relaxed text-text-secondary">
             If a number appears on this site, it was measured. Below is the
             setup so you can run it yourself and get the same result — or find a
             hole in my methodology.
@@ -68,60 +64,58 @@ export default function BenchmarksPage() {
         </header>
 
         <section className="mb-20">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tight mb-2">
+          <h2 className="mb-1 font-heading text-title-2 text-text-primary">
             FlashAudit vs. Gitleaks
           </h2>
-          <p className="text-text-secondary mb-8">
+          <p className="mb-8 font-mono text-mono-body text-text-muted">
             Secret scanning on an enterprise monorepo corpus.
           </p>
 
-          <div className="mb-10 glass-card p-6">
-            <h3 className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-              // setup
+          {/* Setup */}
+          <div className="surface-inset mb-8 p-5">
+            <h3 className="mb-4 font-mono text-caption uppercase text-text-muted">
+              setup
             </h3>
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-widest text-text-muted">
-                  Hardware
-                </dt>
-                <dd className="text-text-primary mt-1">
-                  MacBook Pro M1 Pro · 10 cores · 16 GB RAM
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-widest text-text-muted">
-                  Dataset
-                </dt>
-                <dd className="text-text-primary mt-1">
-                  847,000 files · mixed source languages · ~12 GB uncompressed
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-widest text-text-muted">
-                  Rules
-                </dt>
-                <dd className="text-text-primary mt-1">
-                  Shared baseline (AWS, GitHub, Stripe, generic high-entropy).
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-widest text-text-muted">
-                  Measurement
-                </dt>
-                <dd className="text-text-primary mt-1">
-                  Wall-clock via <code className="font-mono">hyperfine</code>{" "}
-                  (N=10, warm). Peak RSS via{" "}
-                  <code className="font-mono">/usr/bin/time -l</code>.
-                </dd>
-              </div>
+            <dl className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+              {[
+                {
+                  k: "Hardware",
+                  v: "MacBook Pro M1 Pro · 10 cores · 16 GB RAM",
+                },
+                {
+                  k: "Dataset",
+                  v: "847,000 files · mixed source languages · ~12 GB uncompressed",
+                },
+                {
+                  k: "Rules",
+                  v: "Shared baseline (AWS, GitHub, Stripe, generic high-entropy).",
+                },
+                {
+                  k: "Measurement",
+                  v: "Wall-clock via hyperfine (N=10, warm). Peak RSS via /usr/bin/time -l.",
+                },
+              ].map((row) => (
+                <div
+                  key={row.k}
+                  className="data-row grid grid-cols-[7rem_1fr] items-baseline gap-4 py-3"
+                >
+                  <dt className="font-mono text-caption uppercase text-text-muted">
+                    {row.k}
+                  </dt>
+                  <dd className="font-body text-mono-body text-text-primary">
+                    {row.v}
+                  </dd>
+                </div>
+              ))}
             </dl>
           </div>
 
-          <div className="mb-10 glass-card p-6">
-            <h3 className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-              // commands
-            </h3>
-            <pre className="font-mono text-xs text-text-secondary overflow-x-auto bg-base-900/60 rounded p-4 border border-white/[0.06]">
+          {/* Commands — a figure */}
+          <figure className="surface-figure mb-10 overflow-hidden">
+            <figcaption className="border-b border-hairline px-4 py-2 font-mono text-caption uppercase text-text-muted">
+              fig. — reproduction commands
+            </figcaption>
+            <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-text-secondary">
               {`# FlashAudit
 hyperfine --warmup 1 --runs 10 \\
   'flashaudit scan --repo ./enterprise-monorepo --format sarif > /dev/null'
@@ -130,59 +124,68 @@ hyperfine --warmup 1 --runs 10 \\
 hyperfine --warmup 1 --runs 10 \\
   'gitleaks detect --source ./enterprise-monorepo --report-path /dev/null'`}
             </pre>
-          </div>
+          </figure>
 
+          {/* Results table */}
           <div className="overflow-x-auto">
             <table className="w-full font-mono text-sm">
               <thead>
-                <tr className="border-b border-white/[0.12]">
-                  <th className="text-left py-3 pr-4 text-text-muted font-normal uppercase tracking-widest text-xs">
-                    Tool
-                  </th>
-                  <th className="text-left py-3 pr-4 text-text-muted font-normal uppercase tracking-widest text-xs">
-                    Version
-                  </th>
-                  <th className="text-right py-3 pr-4 text-text-muted font-normal uppercase tracking-widest text-xs">
-                    Wall-clock
-                  </th>
-                  <th className="text-right py-3 pr-4 text-text-muted font-normal uppercase tracking-widest text-xs">
-                    Peak RSS
-                  </th>
-                  <th className="text-right py-3 text-text-muted font-normal uppercase tracking-widest text-xs">
-                    Files/sec
-                  </th>
+                <tr className="border-b border-hairline-strong">
+                  {[
+                    "Tool",
+                    "Version",
+                    "Wall-clock",
+                    "Peak RSS",
+                    "Files/sec",
+                  ].map((h, i) => (
+                    <th
+                      key={h}
+                      className={`py-3 pr-4 font-normal text-caption uppercase text-text-muted ${
+                        i < 2 ? "text-left" : "text-right"
+                      }`}
+                    >
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {FLASHAUDIT_VS_GITLEAKS.map((row, i) => (
-                  <tr
-                    key={row.tool}
-                    className={
-                      i === 0
-                        ? "border-b border-white/[0.06] text-accent-amber"
-                        : "border-b border-white/[0.06] text-text-primary"
-                    }
-                  >
-                    <td className="py-4 pr-4">{row.tool}</td>
+                  <tr key={row.tool} className="border-b border-hairline">
+                    <td
+                      className={`py-4 pr-4 ${
+                        i === 0
+                          ? "border-l-2 border-accent-amber pl-3 text-text-primary"
+                          : "text-text-primary"
+                      }`}
+                    >
+                      {row.tool}
+                    </td>
                     <td className="py-4 pr-4 text-text-muted">{row.version}</td>
-                    <td className="py-4 pr-4 text-right">{row.wallClock}</td>
-                    <td className="py-4 pr-4 text-right">{row.peakRss}</td>
-                    <td className="py-4 text-right">{row.filesPerSec}</td>
+                    <td className="py-4 pr-4 text-right tabular-nums">
+                      {row.wallClock}
+                    </td>
+                    <td className="py-4 pr-4 text-right tabular-nums">
+                      {row.peakRss}
+                    </td>
+                    <td className="py-4 text-right tabular-nums">
+                      {row.filesPerSec}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <p className="font-mono text-xs text-text-muted mt-8 leading-relaxed">
+          <p className="mt-8 font-mono text-mono-body leading-relaxed text-text-muted">
             Numbers are median of 10 warm runs. Gitleaks was run with default
             concurrency; FlashAudit uses one OS thread per physical core. Raw{" "}
-            <code>hyperfine</code> output lives in the repo at{" "}
+            hyperfine output lives in the repo at{" "}
             <a
               href="https://github.com/Ruddxxy/Flash-Audit-Core"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-amber hover:text-accent-amber-bright"
+              className="link-mono link-mono-verify"
             >
               /benchmarks/
             </a>
@@ -190,18 +193,18 @@ hyperfine --warmup 1 --runs 10 \\
           </p>
         </section>
 
-        <section className="border-t border-white/[0.06] pt-12">
-          <p className="font-mono text-xs uppercase tracking-widest text-text-muted mb-4">
-            // found an issue?
+        <section className="border-t border-hairline pt-12">
+          <p className="mb-4 font-mono text-caption uppercase text-text-muted">
+            found an issue?
           </p>
-          <p className="text-text-secondary leading-relaxed">
+          <p className="font-body text-body leading-relaxed text-text-secondary">
             If the methodology has a hole or your environment gets different
             numbers, I want to know. Open an issue on the{" "}
             <a
               href="https://github.com/Ruddxxy/Flash-Audit-Core/issues"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-amber hover:text-accent-amber-bright"
+              className="link-mono link-mono-verify"
             >
               Flash-Audit-Core repo
             </a>{" "}

@@ -13,7 +13,7 @@ interface UsePretextLayoutResult {
   ready: boolean;
   height: number;
   lineCount: number;
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export function usePretextLayout({
@@ -22,7 +22,10 @@ export function usePretextLayout({
 }: UsePretextLayoutOptions): UsePretextLayoutResult {
   const ctx = useContext(PretextContext);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [result, setResult] = useState<LayoutResult>({ lineCount: 0, height: 0 });
+  const [result, setResult] = useState<LayoutResult>({
+    lineCount: 0,
+    height: 0,
+  });
   const [measured, setMeasured] = useState(false);
 
   const compute = useCallback(() => {

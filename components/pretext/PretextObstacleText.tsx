@@ -59,7 +59,8 @@ function computeLines(
   let y = 0;
 
   while (true) {
-    const inObstacleRange = y >= obstacle.top && y < obstacle.top + obstacle.height;
+    const inObstacleRange =
+      y >= obstacle.top && y < obstacle.top + obstacle.height;
     const availableWidth = inObstacleRange
       ? containerWidth - obstacle.width - obstacle.gap
       : containerWidth;
@@ -106,7 +107,9 @@ export default function PretextObstacleText({
 
     function compute() {
       const width = el!.getBoundingClientRect().width;
-      const desktop = width >= 768;
+      // Enable the obstacle flow once there's room for the obstacle + a usable
+      // text column beside it; below this it falls back to a stacked layout.
+      const desktop = width >= 700;
       setIsDesktop(desktop);
 
       if (!desktop) {
@@ -151,7 +154,9 @@ export default function PretextObstacleText({
     <div
       ref={containerRef}
       className={`relative ${className}`}
-      style={{ minHeight: Math.max(totalHeight, obstacle.top + obstacle.height) }}
+      style={{
+        minHeight: Math.max(totalHeight, obstacle.top + obstacle.height),
+      }}
     >
       {/* Text lines */}
       {lines.map((line, i) => (

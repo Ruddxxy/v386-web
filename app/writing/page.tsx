@@ -84,30 +84,27 @@ export default async function WritingPage() {
 
   return (
     <main className="min-h-screen bg-base-950 text-text-primary">
-      <div className="max-w-3xl mx-auto px-6 py-20 md:py-28">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-text-muted hover:text-accent-amber transition-colors mb-12"
-        >
-          ← Home
+      <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
+        <Link href="/" className="link-mono mb-12 inline-block">
+          ← home
         </Link>
 
         <header className="mb-16">
-          <p className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-            // writing
+          <p className="mb-4 font-mono text-caption uppercase text-accent-amber">
+            writing
           </p>
-          <h1 className="text-4xl md:text-6xl font-heading font-bold leading-[1.05] tracking-tight mb-6">
+          <h1 className="font-heading text-title-1 leading-[1.05] text-text-primary">
             Field notes
             <span className="text-accent-amber">.</span>
           </h1>
-          <p className="text-lg text-text-secondary font-body leading-relaxed">
+          <p className="mt-5 max-w-[60ch] font-body text-lede leading-relaxed text-text-secondary">
             Occasional write-ups from shipping things — what broke, what I
             tried, what finally worked. Source of truth lives at{" "}
             <a
               href="https://ruddybuilds.substack.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-amber hover:text-accent-amber-bright underline underline-offset-4"
+              className="link-mono"
             >
               ruddybuilds.substack.com
             </a>
@@ -116,8 +113,8 @@ export default async function WritingPage() {
         </header>
 
         {posts.length === 0 ? (
-          <div className="glass-card p-8 text-center">
-            <p className="text-text-secondary mb-4">
+          <div className="surface-inset p-8">
+            <p className="mb-6 font-body text-body text-text-secondary">
               The feed didn&apos;t respond on this build. Head straight to
               Substack for the latest.
             </p>
@@ -125,41 +122,46 @@ export default async function WritingPage() {
               href="https://ruddybuilds.substack.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-amber inline-flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-mono uppercase tracking-wider text-sm"
+              className="btn-ghost inline-flex items-center px-6 py-3 text-caption uppercase"
             >
               Open Substack →
             </a>
           </div>
         ) : (
-          <ul className="space-y-8">
+          <ul className="border-t border-hairline">
             {posts.map((post) => (
-              <li key={post.url} className="glass-card p-6 md:p-8">
-                <p className="font-mono text-[11px] uppercase tracking-widest text-text-muted mb-3">
+              <li
+                key={post.url}
+                className="data-row grid grid-cols-1 gap-2 py-8 md:grid-cols-[8rem_1fr] md:gap-8"
+              >
+                <p className="font-mono text-caption uppercase text-text-muted md:pt-2">
                   {formatDate(post.pubDate)}
                 </p>
-                <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tight mb-3">
+                <div>
+                  <h2 className="font-heading text-title-2 text-text-primary">
+                    <a
+                      href={post.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-accent-amber"
+                    >
+                      {post.title}
+                    </a>
+                  </h2>
+                  {post.excerpt && (
+                    <p className="mt-3 font-body text-body leading-relaxed text-text-secondary">
+                      {post.excerpt}…
+                    </p>
+                  )}
                   <a
                     href={post.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-accent-amber transition-colors"
+                    className="link-mono mt-4 inline-block"
                   >
-                    {post.title}
+                    read on substack ↗
                   </a>
-                </h2>
-                {post.excerpt && (
-                  <p className="text-text-secondary leading-relaxed mb-4">
-                    {post.excerpt}…
-                  </p>
-                )}
-                <a
-                  href={post.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent-amber hover:text-accent-amber-bright transition-colors"
-                >
-                  Read on Substack →
-                </a>
+                </div>
               </li>
             ))}
           </ul>

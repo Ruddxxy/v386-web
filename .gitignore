@@ -3,6 +3,8 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+# Bun is the single package manager (packageManager: bun@1.3.10). Never commit npm's lockfile.
+package-lock.json
 
 # testing
 /coverage

@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCaseStudyProjects, getProject, type Project } from "@/lib/projects";
+import {
+  getCaseStudyProjects,
+  getProject,
+  getVisibility,
+  getProjectIndex,
+  type Project,
+} from "@/lib/projects";
+import SpecTable, { type SpecRow } from "@/components/SpecTable";
 
 // Only the projects with a caseStudy object get a static page.
 // Everything else 404s — we don't want thin routes diluting the crawl.
@@ -72,6 +79,23 @@ export default async function CaseStudyPage({
   const project = getProject(slug);
   if (!project || !project.caseStudy) notFound();
   const cs = project.caseStudy!;
+  const visibility = getVisibility(project);
+  const caseNo = `03.${String(getProjectIndex(project.slug)).padStart(2, "0")}`;
+  const metricRows: SpecRow[] = cs.metrics.map((m) => ({
+    label: m.label,
+    value: m.value,
+    note: m.note,
+  }));
+
+  const meta: { k: string; v: string }[] = [
+    { k: "case file", v: caseNo },
+    {
+      k: "classification",
+      v: visibility === "private" ? "restricted" : "public",
+    },
+    { k: "category", v: project.category.replace("-", " & ") },
+    { k: "language", v: project.programmingLanguage ?? project.techStack[0] },
+  ];
 
   return (
     <main className="min-h-screen bg-base-950 text-text-primary">
@@ -82,136 +106,119 @@ export default async function CaseStudyPage({
         }}
       />
 
-      <div className="max-w-3xl mx-auto px-6 py-20 md:py-28">
+      <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
         {/* Back link */}
-        <Link
-          href="/#projects"
-          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-text-muted hover:text-accent-amber transition-colors mb-12"
-        >
-          ← Back to Arsenal
+        <Link href="/#projects" className="link-mono mb-12 inline-block">
+          ← the record
         </Link>
 
         {/* Header */}
-        <header className="mb-16">
-          <p className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-            // case study · {project.category.replace("-", " & ")}
-          </p>
-          <h1 className="text-4xl md:text-6xl font-heading font-bold leading-[1.05] tracking-tight mb-6">
+        <header className="mb-14">
+          <h1 className="font-heading text-title-1 leading-[1.05] text-text-primary">
             {project.title}
             <span className="text-accent-amber">.</span>
           </h1>
-          <p className="text-xl text-text-secondary font-body leading-relaxed">
+          <p className="mt-3 font-mono text-caption uppercase text-text-secondary">
             {project.tagline}
           </p>
-          <div className="flex flex-wrap gap-2 mt-8">
-            {project.techStack.map((t) => (
-              <span
-                key={t}
-                className="px-3 py-1 surface-outline rounded-full text-accent-cyan font-mono text-xs"
-              >
-                {t}
-              </span>
+
+          {/* Case-file band */}
+          <div className="surface-inset mt-8 grid grid-cols-2 gap-x-6 gap-y-3 p-4 md:grid-cols-4">
+            {meta.map((m) => (
+              <div key={m.k} className="flex flex-col gap-1">
+                <span className="font-mono text-caption uppercase text-text-muted">
+                  {m.k}
+                </span>
+                <span className="font-mono text-mono-body uppercase text-text-primary">
+                  {m.v}
+                </span>
+              </div>
             ))}
           </div>
+
+          <p className="mt-4 font-mono text-mono-body text-text-muted">
+            {project.techStack.join("  ·  ")}
+          </p>
           {project.github && (
             <a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent-amber hover:text-accent-amber-bright transition-colors"
+              className="link-mono link-mono-verify mt-4 inline-block"
             >
-              View on GitHub →
+              source ↗
             </a>
           )}
         </header>
 
         {/* Problem */}
-        <section className="mb-16">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-            // the problem
+        <section className="mb-14">
+          <h2 className="mb-4 font-mono text-caption uppercase text-accent-amber">
+            the problem
           </h2>
-          <p className="text-lg text-text-primary leading-relaxed border-l-2 border-accent-amber/40 pl-6 italic">
+          <p className="border-l-2 border-accent-amber pl-6 font-body text-lede leading-relaxed text-text-primary">
             {project.problem}
           </p>
         </section>
 
         {/* Overview */}
-        <section className="mb-16">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-            // overview
+        <section className="mb-14">
+          <h2 className="mb-4 font-mono text-caption uppercase text-accent-amber">
+            overview
           </h2>
-          <p className="text-base text-text-secondary leading-relaxed">
+          <p className="font-body text-body leading-relaxed text-text-secondary">
             {cs.overview}
           </p>
         </section>
 
         {/* Architecture */}
-        <section className="mb-16">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-            // how it works
+        <section className="mb-14">
+          <h2 className="mb-4 font-mono text-caption uppercase text-accent-amber">
+            how it works
           </h2>
-          <ul className="space-y-4">
+          <ul>
             {cs.architecture.map((point, i) => (
-              <li key={i} className="flex gap-4 text-text-secondary">
-                <span className="text-accent-amber font-mono text-sm flex-shrink-0 mt-1">
+              <li
+                key={i}
+                className="data-row grid grid-cols-[2.5rem_1fr] gap-4 py-4 text-text-secondary"
+              >
+                <span className="font-mono text-mono-body text-accent-amber">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="leading-relaxed">{point}</span>
+                <span className="font-body text-body leading-relaxed">
+                  {point}
+                </span>
               </li>
             ))}
           </ul>
         </section>
 
         {/* Metrics */}
-        <section className="mb-16">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-            // measured impact
+        <section className="mb-14">
+          <h2 className="mb-4 font-mono text-caption uppercase text-accent-amber">
+            measured impact
           </h2>
-          <div className="glass-card overflow-hidden">
-            <div className="h-[2px] bg-gradient-to-r from-transparent via-accent-amber/30 to-transparent" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.06]">
-              {cs.metrics.map((m) => (
-                <div key={m.label} className="p-6">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-text-muted mb-2">
-                    {m.label}
-                  </p>
-                  <p className="text-3xl md:text-4xl font-heading font-bold text-text-primary">
-                    {m.value}
-                  </p>
-                  {m.note && (
-                    <p className="font-mono text-[11px] text-accent-amber/70 mt-2">
-                      {m.note}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          <SpecTable rows={metricRows} />
         </section>
 
         {/* What I'd change */}
-        <section className="mb-16">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-accent-amber mb-4">
-            // what I&apos;d change
+        <section className="mb-14">
+          <h2 className="mb-4 font-mono text-caption uppercase text-accent-amber">
+            what I&apos;d change
           </h2>
-          <p className="text-base text-text-secondary leading-relaxed">
+          <p className="font-body text-body leading-relaxed text-text-secondary">
             {cs.whatIdChange}
           </p>
         </section>
 
         {/* CTA */}
-        <section className="border-t border-white/[0.06] pt-12 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-text-muted mb-2">
-              // want one of these for your stack?
-            </p>
-            <p className="text-text-primary font-body">
-              I take on systems work with clear, measurable outcomes.
-            </p>
-          </div>
+        <section className="flex flex-col items-start justify-between gap-6 border-t border-hairline pt-12 sm:flex-row sm:items-center">
+          <p className="max-w-sm font-body text-body text-text-secondary">
+            I take on systems work with clear, measurable outcomes.
+          </p>
           <a
             href="mailto:rudranarayanmohapatro@gmail.com"
-            className="btn-amber inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-mono uppercase tracking-wider text-sm flex-shrink-0"
+            className="btn-solid inline-flex flex-shrink-0 items-center px-6 py-3 text-caption uppercase"
           >
             Start a project
           </a>

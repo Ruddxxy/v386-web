@@ -1,18 +1,10 @@
 "use client";
 
-import { useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { layout, type PreparedText } from "@chenglou/pretext";
-import { PretextContext } from "./pretext/PretextProvider";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 interface MasonryItem {
   key: string;
-  registryKeys: {
-    problem: string;
-    description: string;
-  };
-  highlightCount: number;
-  techStackCount: number;
-  render: (style: React.CSSProperties) => ReactNode;
+  render: () => ReactNode;
 }
 
 interface MasonryGridProps {
@@ -21,143 +13,101 @@ interface MasonryGridProps {
   gap?: number;
 }
 
-// Fixed heights for known card elements (in px)
-const HEADER_HEIGHT = 80;        // p-6 + title + tagline
-const BODY_PADDING = 48;         // p-6 top + bottom
-const PROBLEM_PADDING = 16;      // mb-4
-const TECH_ROW_HEIGHT = 32;      // badge height + gap
-const TECH_BADGE_AVG_WIDTH = 90; // average badge width including padding + gap
-const HIGHLIGHT_ROW_HEIGHT = 28; // per highlight row
-const HIGHLIGHT_GAP = 12;        // space-y-3
-
-function predictCardHeight(
-  ctx: { getHandle: (key: string) => PreparedText | null },
-  registryKeys: { problem: string; description: string },
-  highlightCount: number,
-  techStackCount: number,
-  columnWidth: number,
-): number {
-  const contentWidth = columnWidth - 48; // p-6 = 24px each side
-
-  let textHeight = 0;
-
-  // Problem text height
-  const problemHandle = ctx.getHandle(registryKeys.problem);
-  if (problemHandle) {
-    const problemResult = layout(problemHandle, contentWidth, 20);
-    textHeight += problemResult.height + PROBLEM_PADDING;
-  } else {
-    textHeight += 40 + PROBLEM_PADDING;
-  }
-
-  // Tech stack rows
-  const techRows = Math.max(1, Math.ceil((techStackCount * TECH_BADGE_AVG_WIDTH) / contentWidth));
-  textHeight += techRows * TECH_ROW_HEIGHT + 16;
-
-  // Description text height
-  const descHandle = ctx.getHandle(registryKeys.description);
-  if (descHandle) {
-    const descResult = layout(descHandle, contentWidth, 24);
-    textHeight += descResult.height + 24; // mb-6
-  } else {
-    textHeight += 72 + 24;
-  }
-
-  // Highlights
-  textHeight += highlightCount * HIGHLIGHT_ROW_HEIGHT + (highlightCount - 1) * HIGHLIGHT_GAP;
-
-  return HEADER_HEIGHT + BODY_PADDING + textHeight;
+interface Placement {
+  top: number;
+  left: number;
 }
 
+/**
+ * Measure-and-pack masonry. Cards render at the computed column width, then we
+ * measure their ACTUAL heights and pack each into the shortest column. No height
+ * prediction — the cards contain no async content, so measured height is exact
+ * and columns can never overlap.
+ */
 export default function MasonryGrid({
   items,
   columns = 2,
   gap = 32,
 }: MasonryGridProps) {
-  const ctx = useContext(PretextContext);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [positions, setPositions] = useState<
-    { top: number; left: number; width: number; height: number }[]
-  >([]);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [dims, setDims] = useState({ colWidth: 0, cols: 1, isMobile: true });
+  const [placements, setPlacements] = useState<Placement[]>([]);
   const [containerHeight, setContainerHeight] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
+  // Pass 1 — column geometry from the container width.
+  useLayoutEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      const mobile = w < 640;
+      const cols = mobile ? 1 : Math.min(columns, items.length);
+      const colWidth = mobile ? w : (w - gap * (cols - 1)) / cols;
+      setDims({ colWidth, cols, isMobile: mobile });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [items.length, columns, gap]);
 
-    function compute() {
-      const containerWidth = el!.getBoundingClientRect().width;
-      const mobile = containerWidth < 640;
-      setIsMobile(mobile);
-
-      if (mobile) {
-        setPositions([]);
-        setContainerHeight(0);
-        return;
-      }
-
-      const actualColumns = Math.min(columns, items.length);
-      const columnWidth = (containerWidth - gap * (actualColumns - 1)) / actualColumns;
-      const columnHeights = new Array(actualColumns).fill(0);
-      const newPositions: typeof positions = [];
-
-      for (const item of items) {
-        // Find shortest column
-        const colIndex = columnHeights.indexOf(Math.min(...columnHeights));
-        const height = ctx.ready
-          ? predictCardHeight(ctx, item.registryKeys, item.highlightCount, item.techStackCount, columnWidth)
-          : 350;
-
-        newPositions.push({
-          top: columnHeights[colIndex],
-          left: colIndex * (columnWidth + gap),
-          width: columnWidth,
-          height,
-        });
-
-        columnHeights[colIndex] += height + gap;
-      }
-
-      setPositions(newPositions);
-      setContainerHeight(Math.max(...columnHeights) - gap);
+  // Pass 2 — measure real card heights and pack into the shortest column.
+  useLayoutEffect(() => {
+    if (dims.isMobile || dims.colWidth === 0) {
+      setPlacements([]);
+      setContainerHeight(0);
+      return;
     }
+    const colHeights = new Array(dims.cols).fill(0);
+    const next: Placement[] = [];
+    items.forEach((_, i) => {
+      const node = itemRefs.current[i];
+      const h = node ? node.getBoundingClientRect().height : 400;
+      const col = colHeights.indexOf(Math.min(...colHeights));
+      next.push({ top: colHeights[col], left: col * (dims.colWidth + gap) });
+      colHeights[col] += h + gap;
+    });
+    setPlacements(next);
+    setContainerHeight(Math.max(...colHeights) - gap);
+  }, [dims, items, gap]);
 
-    compute();
-
-    const observer = new ResizeObserver(() => compute());
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [ctx.ready, items, columns, gap, ctx]);
-
-  // Mobile: standard stacked layout
-  if (isMobile || positions.length === 0) {
+  // Mobile: simple stacked grid.
+  if (dims.isMobile) {
     return (
-      <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {items.map((item) =>
-          item.render({ position: "relative" as const })
-        )}
+      <div ref={containerRef} className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        {items.map((item) => (
+          <div key={item.key}>{item.render()}</div>
+        ))}
       </div>
     );
   }
+
+  const positioned = placements.length === items.length;
 
   return (
     <div
       ref={containerRef}
       className="relative"
-      style={{ height: containerHeight }}
+      style={{ height: positioned ? containerHeight : undefined }}
     >
-      {items.map((item, index) => {
-        const pos = positions[index];
-        if (!pos) return null;
-
-        return item.render({
-          position: "absolute" as const,
-          top: pos.top,
-          left: pos.left,
-          width: pos.width,
-        });
-      })}
+      {items.map((item, i) => (
+        <div
+          key={item.key}
+          ref={(el) => {
+            itemRefs.current[i] = el;
+          }}
+          style={{
+            position: "absolute",
+            top: positioned ? placements[i].top : 0,
+            left: positioned ? placements[i].left : 0,
+            width: dims.colWidth,
+            visibility: positioned ? "visible" : "hidden",
+          }}
+        >
+          {item.render()}
+        </div>
+      ))}
     </div>
   );
 }

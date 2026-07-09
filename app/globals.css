@@ -26,227 +26,129 @@ body {
   color: #0e1018;
 }
 
+/* Quiet, on-theme scrollbar — the thumb is structure grey, amber only on hover. */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a2030;
+  background: #0e1018;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e5a537;
-  border-radius: 4px;
+  background: #2e3444;
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #f0c05c;
+  background: #e5a537;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Editorial dossier surface + control language                       */
+/*  Flat panels, hairline rules, radius <= 2px. No glass, no glow.     */
+/* ------------------------------------------------------------------ */
 @layer components {
-  .glass-card {
-    background: rgba(255, 255, 255, 0.035);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 0.75rem;
-  }
-
-  .glass-card-elevated {
-    background: rgba(255, 255, 255, 0.055);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
-  }
-
-  .glass-nav {
-    background: rgba(20, 24, 38, 0.75);
-    backdrop-filter: blur(20px) saturate(1.2);
-    -webkit-backdrop-filter: blur(20px) saturate(1.2);
-  }
-
-  .glass-glow-amber {
-    transition:
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
-  }
-
-  .glass-glow-amber:hover {
-    border-color: rgba(229, 165, 55, 0.3);
-    box-shadow:
-      0 0 20px rgba(229, 165, 55, 0.12),
-      0 0 40px rgba(229, 165, 55, 0.04);
-  }
-
-  .surface-terminal {
-    background: #0e1018;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-left: 3px solid #e5a537;
-    border-radius: 0.75rem;
-  }
-
-  .surface-outline {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.75rem;
-  }
-
-  .surface-solid {
+  /* Primary panel — figures, log excerpts, spec sheets */
+  .surface-panel {
     background: #141826;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
   }
 
-  .surface-data-row {
+  /* Evidence figure — a framed technical exhibit with an amber index rule */
+  .surface-figure {
+    background: #0e1018;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 2px solid #e5a537;
+    border-radius: 0;
+  }
+
+  /* Transparent inset — bordered region that lets the page show through */
+  .surface-inset {
     background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+  }
+
+  /* Ruled data row — the dossier's core repeating unit (lists, tables) */
+  .data-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background-color 0.2s ease;
   }
 
-  .surface-featured {
-    background: rgba(229, 165, 55, 0.04);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(229, 165, 55, 0.15);
-    border-radius: 0.75rem;
+  .data-row:hover {
+    background: rgba(255, 255, 255, 0.02);
   }
 
-  /* CTA button utilities — Phase 3 polish */
-  .btn-amber {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    background: rgba(229, 165, 55, 0.06);
-    border: 1px solid rgba(229, 165, 55, 0.3);
-    color: #e5a537;
+  /* The one stamp of color — a single solid-amber primary CTA per view */
+  .btn-solid {
+    background: #e5a537;
+    color: #0e1018;
+    border: 1px solid #e5a537;
+    border-radius: 2px;
+    font-family: var(--font-mono);
     transition:
-      border-color 0.3s ease,
-      color 0.3s ease,
-      box-shadow 0.4s ease,
-      background 0.3s ease;
+      background-color 0.2s ease,
+      border-color 0.2s ease;
   }
 
-  .btn-amber::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      120deg,
-      transparent 0%,
-      rgba(229, 165, 55, 0.18) 50%,
-      transparent 100%
-    );
-    transform: translateX(-110%);
-    transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-    z-index: -1;
+  .btn-solid:hover {
+    background: #f0c05c;
+    border-color: #f0c05c;
   }
 
-  .btn-amber:hover {
-    border-color: rgba(229, 165, 55, 0.7);
-    color: #f0c05c;
-    background: rgba(229, 165, 55, 0.1);
-    box-shadow:
-      0 0 24px rgba(229, 165, 55, 0.18),
-      0 0 48px rgba(229, 165, 55, 0.06),
-      inset 0 0 0 1px rgba(229, 165, 55, 0.4);
-  }
-
-  .btn-amber:hover::before {
-    transform: translateX(110%);
-  }
-
-  .btn-outline {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
+  /* Secondary control — outline only, borrows amber on hover */
+  .btn-ghost {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #e2e6ee;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 2px;
+    font-family: var(--font-mono);
     transition:
-      border-color 0.3s ease,
-      color 0.3s ease,
-      box-shadow 0.4s ease;
+      border-color 0.2s ease,
+      color 0.2s ease;
   }
 
-  .btn-outline::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      120deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.06) 50%,
-      transparent 100%
-    );
-    transform: translateX(-110%);
-    transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-    z-index: -1;
-  }
-
-  .btn-outline:hover {
-    border-color: rgba(255, 255, 255, 0.25);
-    color: #ffffff;
-    box-shadow:
-      0 0 24px rgba(255, 255, 255, 0.06),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-  }
-
-  .btn-outline:hover::before {
-    transform: translateX(110%);
-  }
-
-  /* Social icon hover — radial amber glow under the icon */
-  .social-icon-glow {
-    position: relative;
-    isolation: isolate;
-    transition:
-      color 0.3s ease,
-      transform 0.3s ease;
-  }
-
-  .social-icon-glow::after {
-    content: "";
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      rgba(229, 165, 55, 0.2) 0%,
-      transparent 65%
-    );
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  .social-icon-glow:hover {
+  .btn-ghost:hover {
+    border-color: #e5a537;
     color: #e5a537;
   }
 
-  .social-icon-glow:hover::after {
-    opacity: 1;
+  /* The dominant link affordance — a mono, underlined, uppercase micro-label */
+  .link-mono {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8b93a8;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: rgba(255, 255, 255, 0.2);
+    transition:
+      color 0.2s ease,
+      text-decoration-color 0.2s ease;
+  }
+
+  .link-mono:hover {
+    color: #e5a537;
+    text-decoration-color: #e5a537;
+  }
+
+  /* Verification variant — cyan, reserved for evidence/repro affordances */
+  .link-mono-verify {
+    color: #3fbdd4;
+    text-decoration-color: rgba(63, 189, 212, 0.35);
+  }
+
+  .link-mono-verify:hover {
+    color: #3fbdd4;
+    text-decoration-color: #3fbdd4;
   }
 }
 
-.text-gradient-amber {
-  background: linear-gradient(135deg, #e5a537, #f0c05c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.bg-scanlines {
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 0.015) 0px,
-    rgba(255, 255, 255, 0.015) 1px,
-    transparent 1px,
-    transparent 2px
-  );
-}
-
+/* Terminal caret blink — one of only two looping motions on the site. */
 @keyframes blink {
   0%,
   100% {
@@ -259,13 +161,6 @@ body {
 
 .animate-blink {
   animation: blink 1s step-end infinite;
-}
-
-.bg-grid-pattern {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
 }
 
 @layer utilities {

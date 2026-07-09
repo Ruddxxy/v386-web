@@ -1,286 +1,224 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
-import { GithubIcon, EmailIcon } from "./icons";
-import ChapterLabel from "./ChapterLabel";
 import MasonryGrid from "./MasonryGrid";
-import ParallaxShapes from "./ParallaxShapes";
+import SectionShell from "./SectionShell";
+import { RuleDraw } from "./motion";
 import {
   getProjectsByCategory,
+  getProject,
+  getVisibility,
+  getProjectIndex,
   type Project,
-  type SurfaceType,
 } from "@/lib/projects";
 
-const PROJECTS_PARALLAX_SHAPES = [
-  // Top-right cyan square
-  {
-    type: "square" as const,
-    className:
-      "top-[8%] right-[6%] w-4 h-4 border border-accent-cyan/25 rotate-12",
-    speed: -0.5,
-  },
-  // Mid-left amber dot
-  {
-    type: "dot" as const,
-    className: "top-[35%] left-[4%] w-2 h-2 bg-accent-amber/30 rounded-full",
-    speed: 0.4,
-  },
-  // Right side amber ring
-  {
-    type: "circle" as const,
-    className:
-      "top-[55%] right-[3%] w-8 h-8 border border-accent-amber/20 rounded-full",
-    speed: -0.7,
-  },
-  // Bottom-left cyan diagonal line
-  {
-    type: "line" as const,
-    className: "bottom-[20%] left-[8%] w-16 h-px bg-accent-cyan/20 rotate-45",
-    speed: 0.3,
-  },
-  // Bottom-right tiny square
-  {
-    type: "square" as const,
-    className: "bottom-[10%] right-[15%] w-2 h-2 border border-accent-amber/30",
-    speed: -0.4,
-  },
-];
-
-function getSurfaceClass(surface: SurfaceType): string {
-  switch (surface) {
-    case "terminal":
-      return "surface-terminal";
-    case "glass-cyan":
-      return "glass-card border-accent-cyan/20";
-    case "glass-amber":
-      return "glass-card glass-glow-amber";
-    case "outline":
-      return "surface-outline";
-  }
+function indexLabel(slug: string): string {
+  return `03.${String(getProjectIndex(slug)).padStart(2, "0")}`;
 }
 
-function getHoverClass(surface: SurfaceType): string {
-  switch (surface) {
-    case "terminal":
-      return "hover:border-accent-amber/30 hover:shadow-[0_0_15px_rgba(229,165,55,0.06)]";
-    case "glass-cyan":
-      return "hover:border-accent-cyan/30 hover:shadow-[0_0_15px_rgba(63,189,212,0.06)]";
-    case "glass-amber":
-      return "hover:border-accent-amber/30 hover:shadow-[0_0_20px_rgba(229,165,55,0.08)]";
-    case "outline":
-      return "hover:border-white/[0.15] hover:shadow-[0_0_15px_rgba(255,255,255,0.03)]";
+/* Repo affordance — replaces the old "Private Beta" pill. Public work links out
+   (cyan = verification); shipping work is footnoted; NSE alone is restricted. */
+function RepoBadge({ project }: { project: Project }) {
+  const v = getVisibility(project);
+  if (v === "public" && project.github) {
+    return (
+      <a
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="link-mono link-mono-verify"
+        aria-label={`${project.title} source on GitHub`}
+      >
+        source ↗
+      </a>
+    );
   }
-}
-
-function CategoryMarker({ label }: { label: string }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true, margin: "-50px" }}
-      className="py-8"
-    >
-      <span className="font-mono text-accent-amber text-sm uppercase tracking-widest">
-        {label}
+  if (v === "private") {
+    return (
+      <span className="font-mono text-caption uppercase text-accent-amber-dim">
+        restricted — case study only
       </span>
-    </motion.div>
+    );
+  }
+  return (
+    <span className="font-mono text-caption uppercase text-text-muted">
+      source: shipping soon
+    </span>
   );
 }
 
-function ProjectCard({
-  project,
-  index,
-  style,
-}: {
-  project: Project;
-  index: number;
-  style?: React.CSSProperties;
-}) {
-  const surfaceClass = getSurfaceClass(project.surface);
-  const hoverClass = getHoverClass(project.surface);
-  const isPrivate = !project.github;
-
+/* Shared card content — used by both the normal cards and the featured card. */
+function CardContent({ project }: { project: Project }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      viewport={{ once: true, margin: "-50px" }}
-      whileHover={{ y: -8, transition: { duration: 0.25 } }}
-      className={`${surfaceClass} ${hoverClass} flex flex-col transition-all duration-300`}
-      style={style}
-    >
-      <div className="p-6 border-b border-white/[0.06] flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <h3 className="text-2xl font-heading font-bold tracking-tight text-text-primary">
-              {project.title}
-            </h3>
-            {isPrivate && (
-              <span className="px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider border border-accent-cyan/30 text-accent-cyan rounded">
-                Private Beta
-              </span>
-            )}
-          </div>
-          <p className="text-accent-amber font-mono text-sm uppercase tracking-wider">
-            {project.tagline}
-          </p>
+    <>
+      {/* Header */}
+      <div className="border-b border-hairline p-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <span className="font-mono text-caption uppercase text-accent-amber">
+            {indexLabel(project.slug)}
+          </span>
+          <RepoBadge project={project} />
         </div>
-        {project.github && (
-          <motion.a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="p-2 surface-outline rounded-lg text-text-secondary hover:text-accent-amber transition-colors duration-300 flex-shrink-0"
-            aria-label={`View ${project.title} on GitHub`}
-          >
-            <GithubIcon size={20} />
-          </motion.a>
-        )}
+        <h3 className="mt-3 font-heading text-title-2 text-text-primary">
+          {project.title}
+        </h3>
+        <p className="mt-1 font-mono text-caption uppercase text-text-secondary">
+          {project.tagline}
+        </p>
       </div>
 
-      <div className="p-6 flex-1">
-        <p className="text-sm font-mono text-color-danger/70 mb-4 italic">
-          Problem: {project.problem}
+      {/* Body */}
+      <div className="flex flex-1 flex-col gap-4 p-5">
+        {/* Problem — rendered at Space Mono 14px to match masonry measurement */}
+        <p className="font-mono text-sm leading-relaxed text-text-secondary">
+          <span className="uppercase tracking-wider text-text-muted">
+            incident —{" "}
+          </span>
+          {project.problem}
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          {project.techStack.map((tech) => (
-            <span
-              key={tech}
-              className="px-3 py-1 surface-outline rounded-full text-accent-cyan font-mono text-xs"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-        <p className="text-text-secondary font-body leading-relaxed mb-6">
+        {/* Tech stack — one mono line, not a badge cloud */}
+        <p className="font-mono text-mono-body text-text-muted">
+          {project.techStack.join("  ·  ")}
+        </p>
+
+        {/* Description — Sora 16px to match masonry measurement */}
+        <p className="font-body text-body text-text-secondary">
           {project.description}
         </p>
 
-        <div className="space-y-3">
-          {project.highlights.map((h, hIndex) => (
+        {/* Highlights — ruled rows */}
+        <div>
+          {project.highlights.map((h, i) => (
             <div
-              key={`${h.label}-${hIndex}`}
-              className="flex items-start gap-3"
+              key={`${h.label}-${i}`}
+              className="data-row grid grid-cols-1 gap-1 py-3 md:grid-cols-[minmax(0,7rem)_1fr] md:gap-4"
             >
-              <span className="text-accent-amber font-mono text-sm uppercase min-w-[90px] flex-shrink-0">
-                {h.label}:
+              <span className="font-mono text-caption uppercase text-accent-amber">
+                {h.label}
               </span>
-              <span className="text-text-secondary text-sm">{h.text}</span>
+              <span className="font-body text-mono-body text-text-secondary">
+                {h.text}
+              </span>
             </div>
           ))}
         </div>
 
         {project.caseStudy && (
-          <Link
-            href={`/projects/${project.slug}`}
-            className="mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent-amber hover:text-accent-amber-bright transition-colors"
-          >
-            Read case study →
+          <Link href={`/projects/${project.slug}`} className="link-mono mt-1">
+            open case file →
           </Link>
         )}
       </div>
-    </motion.div>
+    </>
   );
 }
 
-// Precompute MasonryGrid items at module load — no React-side allocation
-// per render, no closure capture of stale props.
+function ProjectCard({ project }: { project: Project }) {
+  return (
+    <article className="surface-inset flex h-full flex-col">
+      <CardContent project={project} />
+    </article>
+  );
+}
+
+/* Featured — FlashAudit, full width, with its measured benchmark table beside it. */
+function FeaturedCard({ project }: { project: Project }) {
+  const metrics = project.caseStudy?.metrics.slice(0, 3) ?? [];
+  return (
+    <article className="surface-panel mb-8 grid grid-cols-1 md:grid-cols-2">
+      <div className="flex flex-col border-b border-hairline md:border-b-0 md:border-r">
+        <CardContent project={project} />
+      </div>
+      <div className="flex flex-col p-5">
+        <span className="mb-4 font-mono text-caption uppercase text-text-muted">
+          fig. — flashaudit vs. gitleaks 8.18
+        </span>
+        <div className="flex-1">
+          {metrics.map((m, i) => (
+            <div
+              key={i}
+              className="data-row grid grid-cols-[1fr_auto] items-baseline gap-4 py-4"
+            >
+              <span className="font-mono text-caption uppercase text-text-secondary">
+                {m.label}
+                {m.note ? (
+                  <span className="block text-text-muted">{m.note}</span>
+                ) : null}
+              </span>
+              <span className="font-mono text-2xl tabular-nums text-text-primary">
+                {m.value}
+              </span>
+            </div>
+          ))}
+        </div>
+        <Link href="/benchmarks" className="link-mono link-mono-verify mt-4">
+          full methodology → /benchmarks
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+/* Category sub-header — a drawn rule + label + file count. */
+function CategoryHeader({ label, count }: { label: string; count: number }) {
+  return (
+    <div className="mb-6 mt-16 first:mt-0">
+      <RuleDraw />
+      <p className="mt-4 font-mono text-caption uppercase text-text-secondary">
+        {label} · {count} {count === 1 ? "file" : "files"}
+      </p>
+    </div>
+  );
+}
+
+// Precompute masonry items at module load.
 function buildMasonryItems(projects: Project[]) {
-  return projects.map((project, index) => ({
+  return projects.map((project) => ({
     key: project.title,
-    registryKeys: {
-      problem: `${project.registryPrefix}:problem`,
-      description: `${project.registryPrefix}:desc`,
-    },
-    highlightCount: project.highlights.length,
-    techStackCount: project.techStack.length,
-    render: (style: React.CSSProperties) => (
-      <ProjectCard
-        key={project.title}
-        project={project}
-        index={index}
-        style={style}
-      />
-    ),
+    render: () => <ProjectCard project={project} />,
   }));
 }
 
-const SYSTEMS_MASONRY_ITEMS = buildMasonryItems(
-  getProjectsByCategory("systems-security"),
+const flashaudit = getProject("flashaudit");
+// FlashAudit is featured above the grid, so drop it from the systems masonry.
+const SYSTEMS = getProjectsByCategory("systems-security").filter(
+  (p) => p.slug !== "flashaudit",
 );
-const FINTECH_MASONRY_ITEMS = buildMasonryItems(
-  getProjectsByCategory("fintech"),
-);
-const FULLSTACK_MASONRY_ITEMS = buildMasonryItems(
-  getProjectsByCategory("fullstack"),
-);
+const FINTECH = getProjectsByCategory("fintech");
+const FULLSTACK = getProjectsByCategory("fullstack");
+
+const SYSTEMS_ITEMS = buildMasonryItems(SYSTEMS);
+const FINTECH_ITEMS = buildMasonryItems(FINTECH);
+const FULLSTACK_ITEMS = buildMasonryItems(FULLSTACK);
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-16 px-6 relative">
-      <ParallaxShapes shapes={PROJECTS_PARALLAX_SHAPES} />
-      <div className="max-w-7xl mx-auto relative">
-        {/* Section Header — split entry: label drops in from top, heading rises from bottom */}
-        <div className="mb-12 overflow-hidden">
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            <ChapterLabel number="03" title="the arsenal" />
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.15,
-              ease: [0.22, 0.61, 0.36, 1],
-            }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight text-text-primary"
-          >
-            The Arsenal<span className="text-accent-amber">.</span>
-          </motion.h2>
-        </div>
+    <SectionShell
+      id="projects"
+      index="03"
+      title="the record"
+      meta={["11 projects", "3 domains", "measured, not claimed"]}
+    >
+      <h2 className="mb-10 font-heading text-title-1 text-text-primary">
+        The Record<span className="text-accent-amber">.</span>
+      </h2>
 
-        {/* Mid-section CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <motion.a
-            href="mailto:rudranarayanmohapatro@gmail.com"
-            whileTap={{ scale: 0.97 }}
-            className="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl font-mono text-sm uppercase tracking-wider"
-          >
-            <EmailIcon size={16} />
-            Like what you see? Let&apos;s talk.
-          </motion.a>
-        </motion.div>
+      <CategoryHeader
+        label="§ A — systems & security"
+        count={getProjectsByCategory("systems-security").length}
+      />
+      {flashaudit && <FeaturedCard project={flashaudit} />}
+      <MasonryGrid items={SYSTEMS_ITEMS} />
 
-        {/* Systems & Security */}
-        <CategoryMarker label="// systems & security" />
-        <MasonryGrid items={SYSTEMS_MASONRY_ITEMS} />
+      <CategoryHeader label="§ B — fintech & trading" count={FINTECH.length} />
+      <MasonryGrid items={FINTECH_ITEMS} />
 
-        {/* Fintech & Trading */}
-        <CategoryMarker label="// fintech & trading" />
-        <MasonryGrid items={FINTECH_MASONRY_ITEMS} />
-
-        {/* Full-Stack Products */}
-        <CategoryMarker label="// full-stack products" />
-        <MasonryGrid items={FULLSTACK_MASONRY_ITEMS} />
-      </div>
-    </section>
+      <CategoryHeader
+        label="§ C — full-stack products"
+        count={FULLSTACK.length}
+      />
+      <MasonryGrid items={FULLSTACK_ITEMS} />
+    </SectionShell>
   );
 }

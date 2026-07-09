@@ -422,6 +422,25 @@ export const PROJECTS: Project[] = [
   },
 ];
 
+// Shipping status shown on each card. Everything is being made public except the
+// NSE Trading Engine, which stays a case-study-only exhibit (SEBI/broker-bound).
+// Derived from a single rule so there is no per-project flag to keep in sync:
+//   has a repo        -> "public"   (link out)
+//   NSE trading engine -> "private"  (restricted, case study only)
+//   otherwise          -> "shipping" (repo going public soon)
+export type Visibility = "public" | "shipping" | "private";
+
+export function getVisibility(project: Project): Visibility {
+  if (project.github) return "public";
+  if (project.slug === "nse-trading-engine") return "private";
+  return "shipping";
+}
+
+// Global 1-based index for dossier numbering (03.01 ... 03.11), in catalog order.
+export function getProjectIndex(slug: string): number {
+  return PROJECTS.findIndex((p) => p.slug === slug) + 1;
+}
+
 export function getProjectsByCategory(category: ProjectCategory): Project[] {
   return PROJECTS.filter((p) => p.category === category);
 }

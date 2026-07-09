@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Syne, Sora, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-import { SplashProvider } from "@/components/SplashProvider";
-import SplashScreen from "@/components/SplashScreen";
 import SmoothScroller from "@/components/SmoothScroller";
 import { PretextProvider } from "@/components/pretext/PretextProvider";
 import { PROJECTS } from "@/lib/projects";
@@ -10,14 +8,15 @@ import "./globals.css";
 
 const syne = Syne({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  // Only the weights the type scale actually uses (title-2 600, display/title-1 700).
+  weight: ["600", "700"],
   variable: "--font-heading",
   display: "swap",
 });
 
 const sora = Sora({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400"],
   variable: "--font-body",
   display: "swap",
 });
@@ -252,12 +251,9 @@ export default function RootLayout({
             __html: JSON.stringify(jsonLdItemList),
           }}
         />
-        <SplashProvider>
-          <SplashScreen />
-          <SmoothScroller>
-            <PretextProvider>{children}</PretextProvider>
-          </SmoothScroller>
-        </SplashProvider>
+        <SmoothScroller>
+          <PretextProvider>{children}</PretextProvider>
+        </SmoothScroller>
         <Analytics />
       </body>
     </html>

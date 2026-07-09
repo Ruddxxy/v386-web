@@ -1,158 +1,127 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  GithubIcon,
-  LinkedInIcon,
-  EmailIcon,
-  ShieldIcon,
-  XIcon,
-  SubstackIcon,
-} from "./icons";
+import Link from "next/link";
+import { Reveal } from "./motion";
+
+const CONTACT: { label: string; href: string; external?: boolean }[] = [
+  { label: "github ↗", href: "https://github.com/Ruddxxy", external: true },
+  {
+    label: "linkedin ↗",
+    href: "https://linkedin.com/in/rudra2",
+    external: true,
+  },
+  {
+    label: "x / @ruddybuilds ↗",
+    href: "https://x.com/Ruddybuilds",
+    external: true,
+  },
+  {
+    label: "substack ↗",
+    href: "https://ruddybuilds.substack.com",
+    external: true,
+  },
+  {
+    label: "tryhackme ↗",
+    href: "https://tryhackme.com/p/Ruddyignite23",
+    external: true,
+  },
+  { label: "email", href: "mailto:rudranarayanmohapatro@gmail.com" },
+];
+
+const INDEX: { label: string; href: string }[] = [
+  { label: "evidence", href: "#evidence" },
+  { label: "the record", href: "#projects" },
+  { label: "origin", href: "#origin" },
+  { label: "engagement", href: "#services" },
+  { label: "writing", href: "/writing" },
+  { label: "benchmarks", href: "/benchmarks" },
+];
 
 export default function Footer() {
   return (
-    <footer className="bg-base-900/80 backdrop-blur-xl border-t border-accent-amber/10">
-      <div className="max-w-4xl mx-auto px-6 py-16 text-center">
-        {/* Closing statement */}
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight text-text-primary mb-6"
-        >
-          Need something
-          <br />
-          <span className="text-gradient-amber">built right?</span>
-        </motion.h2>
+    <footer className="border-t border-hairline-strong bg-base-950">
+      <div className="mx-auto max-w-[1200px] px-6 py-20 md:px-10">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+          {/* Closing statement */}
+          <Reveal className="md:col-span-6">
+            <h2 className="max-w-[16ch] font-heading text-title-1 text-text-primary">
+              Need something built right
+              <span className="text-accent-amber">?</span>
+            </h2>
+            <p className="mt-4 max-w-[46ch] font-body text-lede text-text-secondary">
+              I take on problems that are genuinely hard. If your system needs
+              to be fast, secure, or unbreakable — that&apos;s where I do my
+              best work.
+            </p>
+            <a
+              href="mailto:rudranarayanmohapatro@gmail.com"
+              className="btn-solid mt-8 inline-flex items-center px-6 py-3 text-caption uppercase"
+            >
+              rudranarayanmohapatro@gmail.com
+            </a>
+            <div className="mt-8 flex flex-col gap-1">
+              <span className="flex items-center gap-2 font-mono text-caption uppercase text-text-secondary">
+                <span
+                  className="inline-block h-1.5 w-1.5 rounded-full bg-color-success"
+                  aria-hidden
+                />
+                taking on new projects
+              </span>
+              <span className="font-mono text-caption uppercase text-text-muted">
+                based in India · working globally
+              </span>
+            </div>
+          </Reveal>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="text-text-secondary text-lg font-body mb-10 max-w-lg mx-auto"
-        >
-          I take on problems that are genuinely hard. If your system needs to be
-          fast, secure, or unbreakable &mdash; that&apos;s where I do my best
-          work.
-        </motion.p>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="mb-6"
-        >
-          <motion.a
-            href="mailto:rudranarayanmohapatro@gmail.com"
-            whileTap={{ scale: 0.97 }}
-            className="btn-amber inline-flex items-center justify-center gap-3 px-10 py-5 rounded-xl font-mono uppercase tracking-wider text-sm"
-          >
-            <EmailIcon size={18} />
-            rudranarayanmohapatro@gmail.com
-          </motion.a>
-        </motion.div>
-
-        {/* Availability + location */}
-        <div className="flex flex-col items-center gap-2 mb-10">
-          <div className="flex items-center justify-center gap-2">
-            <span className="relative flex w-3 h-3">
-              <span className="absolute inset-0 rounded-full bg-color-success/60 animate-ping" />
-              <span className="relative inline-flex w-3 h-3 rounded-full bg-color-success animate-glow-pulse" />
+          {/* Contact */}
+          <div className="md:col-span-3">
+            <span className="font-mono text-caption uppercase text-text-muted">
+              contact
             </span>
-            <span className="text-text-secondary text-sm uppercase tracking-wider font-mono">
-              Taking on new projects
-            </span>
+            <ul className="mt-4 flex flex-col gap-3">
+              {CONTACT.map((c) => (
+                <li key={c.label}>
+                  <a
+                    href={c.href}
+                    {...(c.external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    className="link-mono"
+                  >
+                    {c.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
-          <span className="text-text-muted text-xs uppercase tracking-widest font-mono">
-            Based in India · working globally
-          </span>
+
+          {/* Index + colophon */}
+          <div className="md:col-span-3">
+            <span className="font-mono text-caption uppercase text-text-muted">
+              index
+            </span>
+            <ul className="mt-4 flex flex-col gap-3">
+              {INDEX.map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="link-mono">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 max-w-[28ch] font-mono text-caption uppercase leading-relaxed text-text-muted">
+              set in Syne, Sora &amp; Space Mono · built with Next.js ·
+              benchmarks reproducible at /benchmarks
+            </p>
+          </div>
         </div>
 
-        {/* Social links */}
-        <div className="flex justify-center gap-3 mb-16">
-          <motion.a
-            href="https://github.com/Ruddxxy"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ y: -3, rotate: -4 }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 380, damping: 22 }}
-            className="social-icon-glow p-3 surface-outline rounded-lg text-text-secondary"
-            aria-label="GitHub"
-          >
-            <GithubIcon size={20} />
-          </motion.a>
-          <motion.a
-            href="https://linkedin.com/in/rudra2"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ y: -3, rotate: -4 }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 380, damping: 22 }}
-            className="social-icon-glow p-3 surface-outline rounded-lg text-text-secondary"
-            aria-label="LinkedIn"
-          >
-            <LinkedInIcon size={20} />
-          </motion.a>
-          <motion.a
-            href="https://x.com/Ruddybuilds"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ y: -3, rotate: -4 }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 380, damping: 22 }}
-            className="social-icon-glow p-3 surface-outline rounded-lg text-text-secondary"
-            aria-label="X"
-          >
-            <XIcon size={18} />
-          </motion.a>
-          <motion.a
-            href="https://ruddybuilds.substack.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ y: -3, rotate: -4 }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 380, damping: 22 }}
-            className="social-icon-glow p-3 surface-outline rounded-lg text-text-secondary"
-            aria-label="Substack"
-          >
-            <SubstackIcon size={20} />
-          </motion.a>
-          <motion.a
-            href="https://tryhackme.com/p/Ruddyignite23"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ y: -3, rotate: -4 }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 380, damping: 22 }}
-            className="social-icon-glow p-3 surface-outline rounded-lg text-text-secondary"
-            aria-label="TryHackMe"
-          >
-            <ShieldIcon size={20} />
-          </motion.a>
-          <motion.a
-            href="mailto:rudranarayanmohapatro@gmail.com"
-            whileHover={{ y: -3, rotate: -4 }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 380, damping: 22 }}
-            className="social-icon-glow p-3 surface-outline rounded-lg text-text-secondary"
-            aria-label="Email"
-          >
-            <EmailIcon size={20} />
-          </motion.a>
-        </div>
-
-        {/* Bottom */}
-        <div className="pt-8 border-t border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-text-muted text-sm uppercase tracking-wider font-mono">
-            &copy; 2026 Vector 384. All rights reserved.
+        {/* Bottom rule */}
+        <div className="mt-16 flex flex-col gap-3 border-t border-hairline pt-6 md:flex-row md:items-center md:justify-between">
+          <span className="font-mono text-caption uppercase text-text-muted">
+            © 2026 Vector 384
           </span>
-          <span className="text-text-muted text-sm font-mono">
+          <span className="font-mono text-caption uppercase text-text-muted">
             {"// no shortcuts, no compromises"}
           </span>
         </div>

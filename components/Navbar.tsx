@@ -11,27 +11,30 @@ interface NavLinkProps {
   active?: boolean;
 }
 
+/* Color-only hover, static amber underline for the active section — no tracking
+   animation (it reflows) and no indicator dot. */
 function NavLink({ href, children, active }: NavLinkProps) {
   return (
     <a
       href={href}
-      className={`group relative px-4 py-2 font-mono text-sm uppercase transition-all duration-300 after:absolute after:bottom-0 after:left-1/2 after:h-[2px] after:bg-accent-amber after:transition-all after:duration-300 after:-translate-x-1/2 ${
+      className={`relative px-3 py-2 font-mono text-caption uppercase transition-colors duration-200 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-px after:transition-colors after:duration-200 ${
         active
-          ? "text-accent-amber tracking-widest after:w-full"
-          : "text-text-secondary tracking-wider hover:text-accent-amber hover:tracking-widest after:w-0 hover:after:w-full"
+          ? "text-accent-amber after:bg-accent-amber"
+          : "text-text-secondary after:bg-transparent hover:text-accent-amber"
       }`}
     >
-      {/* Active indicator dot */}
-      <span
-        className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-accent-amber transition-all duration-300 ${
-          active ? "opacity-100 scale-100" : "opacity-0 scale-0"
-        }`}
-        aria-hidden="true"
-      />
       {children}
     </a>
   );
 }
+
+const NAV = [
+  { id: "evidence", label: "Evidence", href: "#evidence" },
+  { id: "projects", label: "Record", href: "#projects" },
+  { id: "origin", label: "Origin", href: "#origin" },
+  { id: "services", label: "Engagement", href: "#services" },
+  { id: "writing", label: "Writing", href: "/writing" },
+];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -53,7 +56,7 @@ export default function Navbar() {
   }, [handleScroll]);
 
   useEffect(() => {
-    const sections = ["origin", "projects", "services"];
+    const sections = ["evidence", "projects", "origin", "services"];
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -76,53 +79,49 @@ export default function Navbar() {
   return (
     <>
       <ScrollProgressBar />
-      <motion.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="fixed z-50 top-0 left-0 right-0 transition-all duration-300"
-      >
+      <nav className="fixed left-0 right-0 top-0 z-50">
         <div
-          className={`transition-all duration-300 ${
+          className={`transition-colors duration-200 ${
             scrolled
-              ? "glass-nav border-b border-white/[0.06]"
+              ? "border-b border-hairline bg-base-950/95"
               : "bg-transparent"
           }`}
         >
-          <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+          <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-3 md:px-10">
             <a
               href="#"
-              className="hover:opacity-80 transition-opacity duration-150"
+              className="transition-opacity duration-150 hover:opacity-80"
             >
               <Image
                 src="/logo.png"
                 alt="Vector 384"
-                width={140}
-                height={45}
-                className="h-10 w-auto mix-blend-screen"
+                width={36}
+                height={36}
+                priority
+                className="h-9 w-9 mix-blend-screen"
               />
             </a>
 
-            <div className="hidden md:flex items-center gap-2">
-              <NavLink href="#origin" active={activeSection === "origin"}>
-                Origin
-              </NavLink>
-              <NavLink href="#projects" active={activeSection === "projects"}>
-                Arsenal
-              </NavLink>
-              <NavLink href="#services" active={activeSection === "services"}>
-                Services
-              </NavLink>
-              <NavLink href="/writing">Writing</NavLink>
+            <div className="hidden items-center gap-1 md:flex">
+              {NAV.map((item) => (
+                <NavLink
+                  key={item.id}
+                  href={item.href}
+                  active={activeSection === item.id}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
             </div>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden glass-card p-2 rounded-lg hover:border-accent-amber/30 transition-colors duration-150"
+              className="surface-inset p-2 transition-colors duration-150 hover:border-accent-amber/40 md:hidden"
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
             >
               <svg
-                className="w-5 h-5 text-text-secondary"
+                className="h-5 w-5 text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -148,37 +147,29 @@ export default function Navbar() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
-                className="md:hidden overflow-hidden"
+                className="overflow-hidden md:hidden"
               >
-                <div className="glass-card-elevated mx-4 mb-4 flex flex-col p-4 gap-1">
-                  {[
-                    { id: "origin", label: "Origin", href: "#origin" },
-                    { id: "projects", label: "Arsenal", href: "#projects" },
-                    { id: "services", label: "Services", href: "#services" },
-                    { id: "writing", label: "Writing", href: "/writing" },
-                  ].map((section, i) => (
-                    <motion.a
-                      key={section.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: i * 0.05 }}
-                      href={section.href}
+                <div className="surface-panel mx-4 mb-4 flex flex-col">
+                  {NAV.map((item) => (
+                    <a
+                      key={item.id}
+                      href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`px-4 py-3 font-mono text-sm uppercase tracking-wider rounded-lg transition-all duration-150 ${
-                        section.id === activeSection
-                          ? "text-accent-amber bg-white/[0.03] border-l-2 border-accent-amber"
-                          : "text-text-secondary hover:text-accent-amber hover:bg-white/[0.03]"
+                      className={`data-row px-4 py-3 font-mono text-caption uppercase transition-colors duration-150 ${
+                        item.id === activeSection
+                          ? "border-l-2 border-accent-amber text-accent-amber"
+                          : "text-text-secondary hover:text-accent-amber"
                       }`}
                     >
-                      {section.label}
-                    </motion.a>
+                      {item.label}
+                    </a>
                   ))}
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-      </motion.nav>
+      </nav>
     </>
   );
 }
